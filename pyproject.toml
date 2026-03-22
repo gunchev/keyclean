@@ -88,6 +88,10 @@ max-args = 7
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+filterwarnings = [
+    "ignore:pkg_resources is deprecated:DeprecationWarning",
+    "ignore:Deprecated call to .pkg_resources.declare_namespace.:DeprecationWarning",
+]
 
 [tool.autopep8]
 max_line_length = 120
