@@ -25,6 +25,8 @@ pip install "keyclean[grab,linux]"  # pynput + python-xlib (Linux X11)
 keyclean
 # or
 python -m keyclean
+# or from the dev tree
+uv run keyclean
 ```
 
 The application launches fullscreen. All keypresses are shown on the virtual keyboard and
