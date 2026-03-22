@@ -107,15 +107,15 @@ _ROW2: List[KeyDef] = [
     KeyDef("p",      "P",        10.5, 2, 1.0, 1.0, pygame.K_p),
     KeyDef("lbrace", "[\n{",     11.5, 2, 1.0, 1.0, pygame.K_LEFTBRACKET),
     KeyDef("rbrace", "]\n}",     12.5, 2, 1.0, 1.0, pygame.K_RIGHTBRACKET),
-    # ISO backslash — 1u, to the left of the tall Enter
-    KeyDef("backslash", "\\\n|", 13.5, 2, 1.0, 1.0, pygame.K_BACKSLASH),
-    # ISO tall Enter — drawn as height=2 starting at row 2
-    KeyDef("enter",  "Enter",    14.5, 2, 1.5, 2.0, pygame.K_RETURN),
+    # ISO backslash — shortened to 0.5u so Enter can start at col 14.0
+    KeyDef("backslash", "\\\n|", 13.5, 2, 0.5, 1.0, pygame.K_BACKSLASH),
+    # ISO tall Enter — starts at 14.0, ends at 15.5 (= _NAV_OFFSET), no overlap with Del
+    KeyDef("enter",  "Enter",    14.0, 2, 1.5, 2.0, pygame.K_RETURN),
 ]
 
 # ---------------------------------------------------------------------------
-# Row 3 — Home row  (Caps A S D F G H J K L ; ' Enter)
-# ISO Enter occupies col 14.5-16.0 in rows 2-3; we skip that column here.
+# Row 3 — Home row  (Caps A S D F G H J K L ; ' # Enter)
+# ISO Enter occupies col 14.0-15.5 in rows 2-3; no duplicate key here.
 # ---------------------------------------------------------------------------
 _ROW3: List[KeyDef] = [
     KeyDef("caps",   "Caps",     0.0,  3, 1.75, 1.0, pygame.K_CAPSLOCK),
@@ -130,9 +130,9 @@ _ROW3: List[KeyDef] = [
     KeyDef("l",      "L",        9.75, 3, 1.0,  1.0, pygame.K_l),
     KeyDef("semi",   ";\n:",     10.75, 3, 1.0, 1.0, pygame.K_SEMICOLON),
     KeyDef("quote",  "'\n\"",    11.75, 3, 1.0, 1.0, pygame.K_QUOTE),
-    # hash/tilde — ISO-only key right of quote, left of tall Enter
-    KeyDef("hash",   "#\n~",     12.75, 3, 1.75, 1.0, pygame.K_HASH),
-    # Enter already defined in _ROW2 (height=2), no duplicate here
+    # hash/tilde — shortened to 1.25u so it ends at col 14.0, aligning with backslash above
+    KeyDef("hash",   "#\n~",     12.75, 3, 1.25, 1.0, pygame.K_HASH),
+    # Enter already defined in _ROW2 (height=2, col=14.0), no duplicate here
 ]
 
 # ---------------------------------------------------------------------------
