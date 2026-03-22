@@ -49,8 +49,8 @@ class Renderer:  # pylint: disable=too-few-public-methods
         max_col_right = max(k.col + k.width for k in KEYS)
         max_row_bottom = max(k.row + k.height for k in KEYS)
 
-        # Reserve top area for datetime + some padding, bottom for counter/help/done.
-        top_reserve = int(screen_h * 0.12)
+        # Reserve top area for title + description + datetime, bottom for counter/help/done.
+        top_reserve = int(screen_h * 0.18)
         bottom_reserve = int(screen_h * 0.15)
         kbd_area_h = screen_h - top_reserve - bottom_reserve
 
@@ -81,7 +81,9 @@ class Renderer:  # pylint: disable=too-few-public-methods
         s = self._scale
         self._font_key = _load_font(max(8, int(config.FONT_KEY_SIZE * s)))
         self._font_counter = _load_font(max(12, int(config.FONT_COUNTER_SIZE * s)))
-        self._font_datetime = _load_font(max(14, int(config.FONT_DATETIME_SIZE * s)))
+        self._font_datetime = _load_font(max(12, int(config.FONT_DATETIME_SIZE * s)))
+        self._font_title = _load_font(max(18, int(config.FONT_TITLE_SIZE * s)))
+        self._font_desc = _load_font(max(10, int(config.FONT_DESC_SIZE * s)))
         self._font_help = _load_font(max(10, int(config.FONT_HELP_SIZE * s)))
         self._font_done = _load_font(max(12, int(config.FONT_DONE_SIZE * s)))
 
@@ -130,7 +132,7 @@ class Renderer:  # pylint: disable=too-few-public-methods
     ) -> pygame.Rect:
         """Draw the full UI.  Returns the Done button Rect for hit-testing."""
         surface.fill(config.COLOR_BG)
-        self._draw_datetime(surface)
+        self._draw_header(surface)
         self._draw_keyboard(surface, pressed_keys)
         self._draw_counter(surface, strike_count)
         self._draw_help(surface, notice)
@@ -143,21 +145,33 @@ class Renderer:  # pylint: disable=too-few-public-methods
     # Sub-draw helpers
     # ------------------------------------------------------------------
 
-    def _draw_datetime(self, surface: pygame.Surface) -> None:
+    def _draw_header(self, surface: pygame.Surface) -> None:
+        # Title
+        title_surf = self._font_title.render(config.APP_TITLE, True, config.COLOR_TITLE_TEXT)
+        y = int(self._sh * 0.02)
+        surface.blit(title_surf, ((self._sw - title_surf.get_width()) // 2, y))
+
+        # Short description
+        y += title_surf.get_height() + int(self._sh * 0.004)
+        desc_surf = self._font_desc.render(config.APP_DESCRIPTION, True, config.COLOR_DESC_TEXT)
+        surface.blit(desc_surf, ((self._sw - desc_surf.get_width()) // 2, y))
+
+        # Datetime
         now = datetime.datetime.now(tz=datetime.timezone.utc).astimezone()
-        # Format: YYYY-MM-DD HH:MM:SS.ffffff ±HHMM TZ
         dt_str = now.strftime(config.DATETIME_FORMAT)
-        # Trim microseconds to 3 digits for readability
-        dot_idx = dt_str.find(".")
-        if dot_idx != -1:
-            # find the space after the microseconds
+        if not config.DATETIME_SHOW_MS:
+            dot_idx = dt_str.find(".")
+            if dot_idx != -1:
+                space_idx = dt_str.find(" ", dot_idx)
+                dt_str = dt_str[:dot_idx] + (dt_str[space_idx:] if space_idx != -1 else "")
+        elif "." in dt_str:
+            # Show only milliseconds (3 digits) rather than all 6 microsecond digits
+            dot_idx = dt_str.find(".")
             space_idx = dt_str.find(" ", dot_idx)
-            if space_idx != -1:
-                dt_str = dt_str[:dot_idx + 4] + dt_str[space_idx:]
-        surf = self._font_datetime.render(dt_str, True, config.COLOR_DATETIME_TEXT)
-        x = (self._sw - surf.get_width()) // 2
-        y = int(self._sh * 0.03)
-        surface.blit(surf, (x, y))
+            dt_str = dt_str[:dot_idx + 4] + (dt_str[space_idx:] if space_idx != -1 else "")
+        y += desc_surf.get_height() + int(self._sh * 0.006)
+        dt_surf = self._font_datetime.render(dt_str, True, config.COLOR_DATETIME_TEXT)
+        surface.blit(dt_surf, ((self._sw - dt_surf.get_width()) // 2, y))
 
     def _draw_keyboard(self, surface: pygame.Surface, pressed_keys: Set[int]) -> None:
         # Build set of key_ids that are currently pressed

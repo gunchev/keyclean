@@ -39,6 +39,8 @@ COLOR_COUNTER_TEXT: Color = (200, 200, 200)
 COLOR_DATETIME_TEXT: Color = (160, 200, 255)
 COLOR_HELP_TEXT: Color = (130, 130, 140)
 COLOR_NOTICE_TEXT: Color = (180, 140, 80)
+COLOR_TITLE_TEXT: Color = (220, 220, 255)
+COLOR_DESC_TEXT: Color = (140, 140, 160)
 COLOR_DONE_BG: Color = (40, 140, 60)
 COLOR_DONE_BG_HOVER: Color = (60, 200, 80)
 COLOR_DONE_TEXT: Color = (255, 255, 255)
@@ -50,7 +52,9 @@ COLOR_WARNING_TEXT: Color = (255, 240, 180)
 # --------------------------------------------------------------------------- #
 FONT_KEY_SIZE: int = 13       # key label font size (scaled)
 FONT_COUNTER_SIZE: int = 22
-FONT_DATETIME_SIZE: int = 28
+FONT_DATETIME_SIZE: int = 22
+FONT_TITLE_SIZE: int = 36
+FONT_DESC_SIZE: int = 16
 FONT_HELP_SIZE: int = 16
 FONT_DONE_SIZE: int = 20
 
@@ -62,6 +66,13 @@ DONE_BUTTON_H: int = 42
 DONE_BUTTON_MARGIN: int = 20   # from bottom-right corner
 
 # --------------------------------------------------------------------------- #
+# Application header
+# --------------------------------------------------------------------------- #
+APP_TITLE: str = "KeyClean"
+APP_DESCRIPTION: str = "Lock your keyboard, wipe it clean."
+
+# --------------------------------------------------------------------------- #
 # Datetime format  (strftime — %f is microseconds in Python; no %N)
 # --------------------------------------------------------------------------- #
 DATETIME_FORMAT: str = "%Y-%m-%d %H:%M:%S.%f %z"
+DATETIME_SHOW_MS: bool = False      # set True to show milliseconds
