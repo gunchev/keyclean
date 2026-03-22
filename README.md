@@ -47,6 +47,55 @@ counted but have no effect on the OS.
 Without the optional extras the app falls back to pygame-only mode (fullscreen), which prevents
 most accidental input but a warning banner is displayed.
 
+## Development
+
+Clone and set up the dev environment with [uv](https://docs.astral.sh/uv/):
+
+```bash
+git clone https://github.com/gunchev/keyclean
+cd keyclean
+uv sync --group dev              # core dev tools + pynput
+uv sync --group dev --extra linux  # also install python-xlib (Linux X11)
+```
+
+Run the test suite:
+
+```bash
+uv run pytest
+# or via make
+make test
+
+```
+
+Lint and format:
+
+```bash
+make lint        # pylint
+make pep8format  # autopep8
+```
+
+Build a wheel:
+
+```bash
+make build
+```
+
+Publish to PyPI / TestPyPI:
+
+```bash
+make upload       # PyPI
+make test_upload  # TestPyPI
+```
+
+Dependency groups:
+
+| Command                 | Installs                                                     |
+|-------------------------|--------------------------------------------------------------|
+| `uv sync --group dev`   | dev toolchain (pytest, pylint, autopep8, tox, twine, pynput) |
+| `uv sync --extra grab`  | `pynput` (runtime, macOS/Windows suppression)                |
+| `uv sync --extra linux` | `python-xlib` (runtime, Linux X11 suppression)               |
+| `uv sync --extra macos` | `pyobjc-framework-Quartz` (runtime, macOS)                   |
+
 ## License
 
 This is free and unencumbered software released into the public domain.

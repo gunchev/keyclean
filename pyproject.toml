@@ -45,6 +45,8 @@ windows = []
 grab = [
     "pynput>=1.7.6",
 ]
+
+[dependency-groups]
 dev = [
     "autopep8",
     "pylint",
