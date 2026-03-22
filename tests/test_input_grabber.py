@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import os
 import sys
 from unittest.mock import MagicMock, patch
 
+import pygame
 import pytest
 
 from keyclean.input_grabber._base import AbstractGrabber
@@ -35,27 +37,102 @@ class TestFallbackGrabber:
         assert not g.active
 
 
+def _mock_pygame_window() -> MagicMock:
+    """Return a mock window instance (return value of from_display_module())."""
+    mock_win = MagicMock()
+    mock_win.keyboard_grab = False
+    return mock_win
+
+
+def _mock_window_class(mock_win: MagicMock) -> MagicMock:
+    """Return a mock Window class whose from_display_module() returns mock_win."""
+    cls = MagicMock()
+    cls.from_display_module.return_value = mock_win
+    return cls
+
+
 class TestWaylandGrabber:
     def test_grab_sets_active(self) -> None:
-        with patch("pygame.get_sdl_version", return_value=(2, 28, 0)):
+        mock_win = _mock_pygame_window()
+        with (
+            patch("pygame.get_sdl_version", return_value=(2, 28, 0)),
+            patch("keyclean.input_grabber._wayland._probe_compositor_support", return_value=True),
+            patch("keyclean.input_grabber._wayland._check_dev_input_access"),
+            patch.object(pygame, "Window", _mock_window_class(mock_win), create=True),
+        ):
             g = WaylandGrabber()
             g.grab()
             assert g.active
 
     def test_release_clears_active(self) -> None:
-        with patch("pygame.get_sdl_version", return_value=(2, 28, 0)):
+        mock_win = _mock_pygame_window()
+        with (
+            patch("pygame.get_sdl_version", return_value=(2, 28, 0)),
+            patch("keyclean.input_grabber._wayland._probe_compositor_support", return_value=True),
+            patch("keyclean.input_grabber._wayland._check_dev_input_access"),
+            patch.object(pygame, "Window", _mock_window_class(mock_win), create=True),
+        ):
             g = WaylandGrabber()
             g.grab()
             g.release()
             assert not g.active
 
+    def test_is_not_fallback(self) -> None:
+        assert WaylandGrabber().is_fallback is False
+
     def test_old_sdl_warns(self, caplog: pytest.LogCaptureFixture) -> None:
         import logging
-        with patch("pygame.get_sdl_version", return_value=(2, 0, 5)):
+        mock_win = _mock_pygame_window()
+        with (
+            patch("pygame.get_sdl_version", return_value=(2, 0, 5)),
+            patch("keyclean.input_grabber._wayland._probe_compositor_support", return_value=True),
+            patch("keyclean.input_grabber._wayland._check_dev_input_access"),
+            patch.object(pygame, "Window", _mock_window_class(mock_win), create=True),
+        ):
             g = WaylandGrabber()
             with caplog.at_level(logging.WARNING):
                 g.grab()
         assert "older than" in caplog.text
+
+    def test_no_compositor_support_warns(self, caplog: pytest.LogCaptureFixture) -> None:
+        import logging
+        mock_win = _mock_pygame_window()
+        with (
+            patch("pygame.get_sdl_version", return_value=(2, 28, 0)),
+            patch("keyclean.input_grabber._wayland._probe_compositor_support", return_value=False),
+            patch("keyclean.input_grabber._wayland._check_dev_input_access"),
+            patch.object(pygame, "Window", _mock_window_class(mock_win), create=True),
+        ):
+            g = WaylandGrabber()
+            with caplog.at_level(logging.WARNING):
+                g.grab()
+        assert "does not advertise" in caplog.text
+
+    def test_keyboard_grab_called(self) -> None:
+        mock_win = _mock_pygame_window()
+        with (
+            patch("pygame.get_sdl_version", return_value=(2, 28, 0)),
+            patch("keyclean.input_grabber._wayland._probe_compositor_support", return_value=True),
+            patch("keyclean.input_grabber._wayland._check_dev_input_access"),
+            patch.object(pygame, "Window", _mock_window_class(mock_win), create=True),
+        ):
+            WaylandGrabber().grab()
+        assert mock_win.keyboard_grab is True
+
+    def test_dev_input_notice_when_no_access(self, caplog: pytest.LogCaptureFixture) -> None:
+        import logging
+        mock_win = _mock_pygame_window()
+        with (
+            patch("pygame.get_sdl_version", return_value=(2, 28, 0)),
+            patch("keyclean.input_grabber._wayland._probe_compositor_support", return_value=True),
+            patch("keyclean.input_grabber._wayland.glob.glob", return_value=["/dev/input/event0"]),
+            patch("keyclean.input_grabber._wayland.os.access", return_value=False),
+            patch.object(pygame, "Window", _mock_window_class(mock_win), create=True),
+        ):
+            g = WaylandGrabber()
+            with caplog.at_level(logging.INFO):
+                g.grab()
+        assert "usermod" in caplog.text
 
 
 class TestGetGrabberFactory:

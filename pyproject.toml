@@ -37,6 +37,7 @@ dependencies = [
 [project.optional-dependencies]
 linux = [
     "python-xlib>=0.33",
+    "pywayland>=0.4.0",
 ]
 macos = [
     "pyobjc-framework-Quartz>=9.0",
@@ -58,6 +59,7 @@ dev = [
     "build",
     "pynput>=1.7.6",
     "python-xlib>=0.33; sys_platform == 'linux'",
+    "pywayland>=0.4.0; sys_platform == 'linux'",
 ]
 
 [project.scripts]
