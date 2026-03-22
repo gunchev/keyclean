@@ -4,18 +4,17 @@ Cross-platform keyboard cleaning utility: locks the keyboard, visualizes keypres
 virtual ISO 105-key layout, and suppresses input to the OS so the user can wipe their
 physical keyboard without triggering commands.
 
-
 ## 1. Global Input Suppression — Feasibility
 
 ### Linux (X11)
 
 **Feasible with `XGrabKeyboard`.**  Any X11 client can call `XGrabKeyboard` to redirect all
-keyboard events to its own window.  This is the same mechanism screen lockers use.
+keyboard events to its own window. This is the same mechanism screen lockers use.
 
 - Library: `python-xlib` (optional dependency).
 - Privilege: none required.
 - Caveat: Alt+F4 may be intercepted by the WM before the grab takes effect if the window is
-  not fullscreen or `override_redirect`.  Running fullscreen via pygame solves this.
+  not fullscreen or `override_redirect`. Running fullscreen via pygame solves this.
 
 ### Linux (Wayland)
 
@@ -42,19 +41,18 @@ framework to intercept and suppress keyboard events system-wide.
 low-level keyboard hook that intercepts and can suppress all keystrokes.
 
 - Privilege: no admin rights required.
-- Caveat: `Ctrl+Alt+Del` (Secure Attention Sequence) always reaches the OS.  Documented as
+- Caveat: `Ctrl+Alt+Del` (Secure Attention Sequence) always reaches the OS. Documented as
   expected behavior.
 
 ### Fallback
 
 If native grabbing fails or `pynput` is unavailable, the app falls back to "pygame-only" mode
-(fullscreen + SDL event capture).  A warning banner is displayed in this mode since Alt+Tab
+(fullscreen + SDL event capture). A warning banner is displayed in this mode since Alt+Tab
 could still escape.
-
 
 ## 2. Handling High-Frequency Input (Keyboard Mashing)
 
-USB HID keyboards poll at 125–1000 Hz.  Mashing 10 keys generates up to ~20,000 events/sec
+USB HID keyboards poll at 125–1000 Hz. Mashing 10 keys generates up to ~20,000 events/sec
 on a 1000 Hz keyboard.
 
 **Strategy — decouple input from rendering:**
@@ -64,12 +62,11 @@ on a 1000 Hz keyboard.
 3. Key state is a `set[int]` of currently-pressed scancodes; updated per event, rendered once.
 4. A key that is pressed and released between two frames simply increments the counter without
    ever being visually highlighted — this is correct and acceptable.
-5. SDL2's internal event queue holds up to 65,535 events.  At 60 FPS we drain it every ~16 ms.
+5. SDL2's internal event queue holds up to 65,535 events. At 60 FPS we drain it every ~16 ms.
    Even at 20,000 events/sec that is ~333 events per frame — well within the buffer.
 6. The strike counter is a plain `int` (Python ints are arbitrary precision).
 
 **No throttling or debouncing is needed.**  The architecture is inherently safe.
-
 
 ## 3. Directory Structure
 
@@ -108,22 +105,20 @@ keyclean/
     └── test_input_grabber.py
 ```
 
-
 ## 4. Key Design Decisions
 
-| Decision | Choice | Rationale |
-|----------|--------|-----------|
-| UI library | `pygame-ce` | Actively maintained, SDL2-backed, Wayland `shortcuts_inhibit` support |
-| Input suppression (macOS/Windows) | `pynput` | Unified API, well-maintained, avoids raw `ctypes`/`pyobjc` |
-| Input suppression (Linux X11) | `python-xlib` | `XGrabKeyboard` is the correct tool; `pynput` on X11 uses `Xlib` under the hood but doesn't expose grab |
-| Input suppression (Linux Wayland) | SDL2 built-in | Only option from userspace; document limitations |
-| Keyboard layout | ISO 105-key | User requirement |
-| Window mode | Fullscreen | Better input suppression, user requirement |
-| Exit phrase | `keys are clean` | User requirement — typed literally to exit |
-| Exit button | "Done" button (mouse click) | Secondary exit method |
-| Build backend | `hatchling` | Lightweight, modern, works with `uv` |
-| Python version | 3.9+ | Broad compatibility |
-
+| Decision                          | Choice                      | Rationale                                                                                               |
+|-----------------------------------|-----------------------------|---------------------------------------------------------------------------------------------------------|
+| UI library                        | `pygame-ce`                 | Actively maintained, SDL2-backed, Wayland `shortcuts_inhibit` support                                   |
+| Input suppression (macOS/Windows) | `pynput`                    | Unified API, well-maintained, avoids raw `ctypes`/`pyobjc`                                              |
+| Input suppression (Linux X11)     | `python-xlib`               | `XGrabKeyboard` is the correct tool; `pynput` on X11 uses `Xlib` under the hood but doesn't expose grab |
+| Input suppression (Linux Wayland) | SDL2 built-in               | Only option from userspace; document limitations                                                        |
+| Keyboard layout                   | ISO 105-key                 | User requirement                                                                                        |
+| Window mode                       | Fullscreen                  | Better input suppression, user requirement                                                              |
+| Exit phrase                       | `keys are clean`            | User requirement — typed literally to exit                                                              |
+| Exit button                       | "Done" button (mouse click) | Secondary exit method                                                                                   |
+| Build backend                     | `hatchling`                 | Lightweight, modern, works with `uv`                                                                    |
+| Python version                    | 3.9+                        | Broad compatibility                                                                                     |
 
 ## 5. Implementation Phases
 
@@ -141,42 +136,42 @@ keyclean/
 ### Phase 2 — Keyboard Layout Data
 
 - Define the ISO 105-key layout in `keyboard_layout.py`:
-  - Each key: `(row, col, width, height, label, pygame_keycode, scancode)`.
-  - Rows: Esc/F-keys, number row, QWERTY, home row, bottom row, space bar row.
-  - Include: numpad, arrows, Insert/Delete/Home/End/PgUp/PgDn block.
-  - The extra ISO key (between left Shift and Z).
+    - Each key: `(row, col, width, height, label, pygame_keycode, scancode)`.
+    - Rows: Esc/F-keys, number row, QWERTY, home row, bottom row, space bar row.
+    - Include: numpad, arrows, Insert/Delete/Home/End/PgUp/PgDn block.
+    - The extra ISO key (between left Shift and Z).
 - Define visual constants in `config.py`: key size in pixels, gap, colors, font sizes.
 
 ### Phase 3 — Renderer
 
 - `renderer.py`: pure rendering module, no input logic.
-  - `draw_keyboard(surface, layout, pressed_keys)` — draws all keys; pressed keys highlighted.
-  - `draw_counter(surface, count)` — persistent strike counter, top-right corner.
-  - `draw_done_button(surface)` — clickable rectangle, returns its `Rect` for hit-testing.
-  - `draw_warning_banner(surface, message)` — for fallback/Wayland mode warnings.
+    - `draw_keyboard(surface, layout, pressed_keys)` — draws all keys; pressed keys highlighted.
+    - `draw_counter(surface, count)` — persistent strike counter, top-right corner.
+    - `draw_done_button(surface)` — clickable rectangle, returns its `Rect` for hit-testing.
+    - `draw_warning_banner(surface, message)` — for fallback/Wayland mode warnings.
 - Auto-scale the layout to fit the screen resolution.
 
 ### Phase 4 — Core App Loop
 
 - `app.py`: `App` class and `main()` function.
 - Flow:
-  1. Initialize pygame, go fullscreen, hide mouse cursor (or keep for "Done" button).
-  2. Acquire input grabber via `get_grabber()`.
-  3. Main loop (60 FPS):
-     - Drain all events from `pygame.event.get()`.
-     - On `KEYDOWN`: add to `pressed_keys`, increment counter, feed char to safety sequence.
-     - On `KEYUP`: remove from `pressed_keys`.
-     - On `MOUSEBUTTONDOWN`: check hit on "Done" button → exit.
-     - Render: keyboard, counter, button, optional warning banner.
-  4. On exit: release grabber, quit pygame.
+    1. Initialize pygame, go fullscreen, hide mouse cursor (or keep for "Done" button).
+    2. Acquire input grabber via `get_grabber()`.
+    3. Main loop (60 FPS):
+        - Drain all events from `pygame.event.get()`.
+        - On `KEYDOWN`: add to `pressed_keys`, increment counter, feed char to safety sequence.
+        - On `KEYUP`: remove from `pressed_keys`.
+        - On `MOUSEBUTTONDOWN`: check hit on "Done" button → exit.
+        - Render: keyboard, counter, button, optional warning banner.
+    4. On exit: release grabber, quit pygame.
 
 ### Phase 5 — Safety Sequence
 
 - `safety_sequence.py`:
-  - `SafetySequence` class holding the target phrase (`"keys are clean"`).
-  - Internal ring buffer (collections.deque with maxlen = len(phrase)).
-  - `feed(char: str) -> bool`: appends char, returns `True` if buffer matches phrase.
-  - Case-insensitive matching (so Caps Lock doesn't break it).
+    - `SafetySequence` class holding the target phrase (`"keys are clean"`).
+    - Internal ring buffer (collections.deque with maxlen = len(phrase)).
+    - `feed(char: str) -> bool`: appends char, returns `True` if buffer matches phrase.
+    - Case-insensitive matching (so Caps Lock doesn't break it).
 - Wire into `app.py`: on `KEYDOWN`, if the key maps to a printable char, feed it.
 
 ### Phase 6 — Input Grabbers
@@ -214,30 +209,28 @@ keyclean/
 - Write a brief `README.md` (installation, usage, exit methods, platform notes).
 - Final `Makefile` cleanup.
 
-
 ## 6. Dependency Summary
 
-| Package | Required | Platform | Purpose |
-|---------|----------|----------|---------|
-| `pygame-ce` ≥ 2.4.0 | always | all | UI, event loop, rendering |
-| `pynput` ≥ 1.7.6 | optional | macOS, Windows | global keyboard suppression |
-| `python-xlib` ≥ 0.33 | optional | Linux (X11) | `XGrabKeyboard` |
-| `autopep8` | dev | all | code formatting |
-| `pylint` | dev | all | linting |
-| `pytest` | dev | all | testing |
-| `pytest-mock` | dev | all | input simulation in tests |
-| `pytest-cov` | dev | all | coverage reporting |
-| `tox` | dev | all | cross-version test runner |
-| `twine` | dev | all | PyPI upload |
-| `build` | dev | all | wheel/sdist building |
-
+| Package              | Required | Platform       | Purpose                     |
+|----------------------|----------|----------------|-----------------------------|
+| `pygame-ce` ≥ 2.4.0  | always   | all            | UI, event loop, rendering   |
+| `pynput` ≥ 1.7.6     | optional | macOS, Windows | global keyboard suppression |
+| `python-xlib` ≥ 0.33 | optional | Linux (X11)    | `XGrabKeyboard`             |
+| `autopep8`           | dev      | all            | code formatting             |
+| `pylint`             | dev      | all            | linting                     |
+| `pytest`             | dev      | all            | testing                     |
+| `pytest-mock`        | dev      | all            | input simulation in tests   |
+| `pytest-cov`         | dev      | all            | coverage reporting          |
+| `tox`                | dev      | all            | cross-version test runner   |
+| `twine`              | dev      | all            | PyPI upload                 |
+| `build`              | dev      | all            | wheel/sdist building        |
 
 ## 7. Open Risks & Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| Wayland compositor doesn't support `shortcuts_inhibit` | Warning banner; document known compositors |
+| Risk                                                                | Mitigation                                                                                      |
+|---------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
+| Wayland compositor doesn't support `shortcuts_inhibit`              | Warning banner; document known compositors                                                      |
 | `pynput` `suppress=True` conflicts with pygame's own event handling | `pynput` listener runs in its own thread; pygame only reads its internal SDL queue; no conflict |
-| macOS Accessibility permission not granted | Detect failure, fall back to pygame-only mode with warning |
-| SDL2 version too old for Wayland inhibit | Check `pygame.get_sdl_version()` at startup; warn if < 2.28 |
-| User types exit phrase accidentally during cleaning | Phrase `"keys are clean"` is 14 chars, highly unlikely from random mashing |
+| macOS Accessibility permission not granted                          | Detect failure, fall back to pygame-only mode with warning                                      |
+| SDL2 version too old for Wayland inhibit                            | Check `pygame.get_sdl_version()` at startup; warn if < 2.28                                     |
+| User types exit phrase accidentally during cleaning                 | Phrase `"keys are clean"` is 14 chars, highly unlikely from random mashing                      |

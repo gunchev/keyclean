@@ -73,9 +73,17 @@ packages = ["src/keyclean"]
 
 [tool.pylint.main]
 source-roots = ["src"]
+# pygame exposes its constants via a C extension; pylint can't introspect them.
+generated-members = ["pygame.*"]
 
 [tool.pylint.format]
 max-line-length = 120
+
+[tool.pylint.design]
+# Renderer is a stateful drawing object — it legitimately needs many attributes.
+max-attributes = 20
+max-locals = 25
+max-args = 7
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

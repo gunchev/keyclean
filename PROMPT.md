@@ -1,16 +1,18 @@
 # KeyClean
 
-
 ## Version 0, before Gemini review
 
 I want to create a "keyboard cleaning application" for Linux, MacOS and Windows.
-The basic idea is to grab the keyboard and allow the user to press any key or combination (as much as possible) without any effect while wiping and pressing randomly.
+The basic idea is to grab the keyboard and allow the user to press any key or combination (as much as possible) without
+any effect while wiping and pressing randomly.
 
 A special keyboard sequence ("keys are clean") or mouse click on a button to end the "cleaning".
-The screen should display an extended keyboad (F1 to F12, arrow keys, numpad) in the middle showing which key is currently pressed and a counter of total number of keys pressed so far.
+The screen should display an extended keyboad (F1 to F12, arrow keys, numpad) in the middle showing which key is
+currently pressed and a counter of total number of keys pressed so far.
 Instructions and a "Done" button to exit the application should be shown on the bottom.
 
 The project must use:
+
 - Python (3.9 and newer) and the `pygame` for multiplatform compatability.
 - The extremely fast Python package manager `uv` should be used.
 - The tools `autopep8`, `pylint`, `pytest` and `tox` should be used for formatting and testing.
@@ -32,24 +34,27 @@ Prepare a plan for implementation and let me review it.
 
 Role: Lead Software Architect / Developer
 
-
 ## Objective
 
 Create a cross-platform keyboard cleaning utility for Linux, macOS, and Windows.
-The app must "lock" the keyboard, visually reflecting keypresses on a virtual UI while suppressing their effect on the OS,
+The app must "lock" the keyboard, visually reflecting keypresses on a virtual UI while suppressing their effect on the
+OS,
 allowing users to wipe their physical keyboard without triggering commands.
-
 
 ## Core Requirements
 
-1. **Input Handling:** - Capture all keyboard events. Use `pygame` for the UI, but acknowledge that native OS hooks (e.g., `pynput` or platform-specific APIs) might be needed to achieve a "Global Hook" that suppresses system shortcuts.
-   - Requirement: The app must prevent accidental "destructive" key combos (like Alt+F4 or Cmd+Q) while in cleaning mode.
+1. **Input Handling:** - Capture all keyboard events. Use `pygame` for the UI, but acknowledge that native OS hooks (
+   e.g., `pynput` or platform-specific APIs) might be needed to achieve a "Global Hook" that suppresses system
+   shortcuts.
+    - Requirement: The app must prevent accidental "destructive" key combos (like Alt+F4 or Cmd+Q) while in cleaning
+      mode.
 2. **Visual Feedback:**
-   - A 100% (Full/Extended) keyboard layout visualization (F-keys, arrows, numpad).
-   - Real-time highlighting of keys currently held down.
-   - A persistent counter showing total key strikes during the session.
+    - A 100% (Full/Extended) keyboard layout visualization (F-keys, arrows, numpad).
+    - Real-time highlighting of keys currently held down.
+    - A persistent counter showing total key strikes during the session.
 3. **Exit Mechanics:**
-   - A specific "Safety Sequence" (e.g., typing 'keys are clean') or a prominent "Done" button clickable via mouse to release the lock and exit.
+    - A specific "Safety Sequence" (e.g., typing 'keys are clean') or a prominent "Done" button clickable via mouse to
+      release the lock and exit.
 
 ## Technical Stack & Constraints
 
@@ -57,9 +62,9 @@ allowing users to wipe their physical keyboard without triggering commands.
 - **UI:** `pygame`.
 - **Environment:** Use `uv` for dependency management (provide a `pyproject.toml`).
 - **DevOps/QA:**
-  - Formatting: `autopep8`.
-  - Linting: `pylint`.
-  - Testing: `pytest` (with `pytest-mock` for input simulation) and `tox` for cross-version testing.
+    - Formatting: `autopep8`.
+    - Linting: `pylint`.
+    - Testing: `pytest` (with `pytest-mock` for input simulation) and `tox` for cross-version testing.
 - **Structure:** `src/` layout.
 - **Deployment:** Ready for PyPI/TestPyPI via `twine`.
 - **Licensing:** Unlicense.
@@ -67,7 +72,8 @@ allowing users to wipe their physical keyboard without triggering commands.
 
 ## Instructions for Claude
 
-1. Analyze the feasibility of "Global Input Suppression" across Linux (X11/Wayland), macOS (Accessibility Permissions), and Windows (LowLevelHooks).
+1. Analyze the feasibility of "Global Input Suppression" across Linux (X11/Wayland), macOS (Accessibility Permissions),
+   and Windows (LowLevelHooks).
 2. Detail how you will handle high-frequency random inputs (keyboard mashing) without crashing the event queue.
 3. Provide a directory structure and a step-by-step implementation plan.
 4. DO NOT write all the code yet. Present the plan and the proposed `pyproject.toml` for review first.
