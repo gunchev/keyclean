@@ -10,6 +10,7 @@ import pygame
 import pytest
 
 from keyclean.input_grabber._base import AbstractGrabber
+from keyclean.input_grabber._evdev import EvdevGrabber
 from keyclean.input_grabber._fallback import FallbackGrabber
 from keyclean.input_grabber._wayland import WaylandGrabber
 
@@ -152,21 +153,35 @@ class TestGetGrabberFactory:
             grabber = get_grabber()
         assert isinstance(grabber, FallbackGrabber)
 
-    def test_linux_wayland_returns_wayland_grabber(
+    def test_linux_wayland_evdev_preferred(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
+        """evdev is chosen over WaylandGrabber when /dev/input is accessible."""
         monkeypatch.setenv("XDG_SESSION_TYPE", "wayland")
-        with patch("keyclean.input_grabber.sys.platform", "linux"):
+        with patch("keyclean.input_grabber.sys.platform", "linux"), \
+             patch("keyclean.input_grabber._evdev_available", return_value=True):
+            from keyclean.input_grabber import get_grabber
+            grabber = get_grabber()
+        assert isinstance(grabber, EvdevGrabber)
+
+    def test_linux_wayland_no_evdev_returns_wayland_grabber(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Falls back to WaylandGrabber when evdev is unavailable."""
+        monkeypatch.setenv("XDG_SESSION_TYPE", "wayland")
+        with patch("keyclean.input_grabber.sys.platform", "linux"), \
+             patch("keyclean.input_grabber._evdev_available", return_value=False):
             from keyclean.input_grabber import get_grabber
             grabber = get_grabber()
         assert isinstance(grabber, WaylandGrabber)
 
-    def test_linux_no_xlib_no_pynput_returns_fallback(
+    def test_linux_no_evdev_no_xlib_no_pynput_returns_fallback(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         monkeypatch.setenv("XDG_SESSION_TYPE", "x11")
         monkeypatch.setenv("DISPLAY", ":0")
         with patch("keyclean.input_grabber.sys.platform", "linux"), \
+             patch("keyclean.input_grabber._evdev_available", return_value=False), \
              patch("importlib.import_module", side_effect=ModuleNotFoundError):
             from keyclean.input_grabber import get_grabber
             grabber = get_grabber()

@@ -36,6 +36,7 @@ dependencies = [
 
 [project.optional-dependencies]
 linux = [
+    "evdev>=1.7.0",
     "python-xlib>=0.33",
     "pywayland>=0.4.0",
 ]

@@ -39,6 +39,20 @@ def get_grabber() -> AbstractGrabber:
 # ---------------------------------------------------------------------------
 
 def _get_linux_grabber() -> AbstractGrabber:
+    # evdev is preferred on Linux: kernel-level grab works on both X11 and
+    # Wayland without any compositor protocol, so Super and all system
+    # shortcuts are fully suppressed.
+    if _evdev_available():
+        from keyclean.input_grabber._evdev import EvdevGrabber
+        return EvdevGrabber()
+
+    logger.info(
+        "evdev unavailable or /dev/input not readable; "
+        "falling back to display-server grabber.  "
+        "For full suppression: sudo usermod -aG input %s",
+        os.environ.get("USER", "$USER"),
+    )
+
     session = os.environ.get("XDG_SESSION_TYPE", "").lower()
 
     if session == "wayland":
@@ -49,7 +63,6 @@ def _get_linux_grabber() -> AbstractGrabber:
     if session in ("x11", "mir", "") and os.environ.get("DISPLAY"):
         try:
             from keyclean.input_grabber._x11 import X11Grabber
-            # Probe that python-xlib is importable before committing.
             import importlib
             importlib.import_module("Xlib")
             return X11Grabber()
@@ -66,6 +79,18 @@ def _get_linux_grabber() -> AbstractGrabber:
         logger.info("pynput not available; using fallback grabber.")
 
     return _get_fallback()
+
+
+def _evdev_available() -> bool:
+    """Return True if evdev is importable and /dev/input devices are readable."""
+    import glob  # pylint: disable=redefined-outer-name
+    try:
+        import importlib
+        importlib.import_module("evdev")
+    except ImportError:
+        return False
+    devices = glob.glob("/dev/input/event*")
+    return bool(devices) and os.access(devices[0], os.R_OK)
 
 
 def _get_pynput_grabber() -> AbstractGrabber:
