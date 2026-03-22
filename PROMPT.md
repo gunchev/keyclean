@@ -78,3 +78,35 @@ allowing users to wipe their physical keyboard without triggering commands.
 3. Provide a directory structure and a step-by-step implementation plan.
 4. DO NOT write all the code yet. Present the plan and the proposed `pyproject.toml` for review first.
 5. Ask questions to clarify unclear points.
+
+# More prompts
+
+> These are the prompts used in the Claude Sonnet 4.6 vibe-coding session.
+
+1. "0. My name is 'Doncho Nikolaev Gunchev', not 'Dimitar'. 1. Yes, use 'keys are clean' exactly. 2. ISO 105 key. 3. Full screen application. 4. Use pygame-ce. 5. Yes, update the Makefile accordingly, this is just a sample/skeleton. 6. Use `pynput`. And write the plan to PLAN.md."
+
+2. "Excellent, I added minor detail with date/time display. Please proceed with the plan." *(after manually editing the renderer line in PLAN.md)*
+
+3. "Write this summary after all done to CHANGELOG.md."
+
+4. "I added all files to git, please commit."
+
+5. "The command `uv sync --group dev` does not seem to do anything."
+
+6. "Add this info to README, development section."
+
+7. "commit please"
+
+8. "On Linux (KDE, Wayland) the Super (windows) key is showing the start menu. Is there a way to capture it. Is some dependency missing?"
+
+9. "Yes please, implement option A and commit." *(during implementation)* "Please add a notice to `sudo usermod -aG input $USER` to the user, if the access is not granted on /dev/*..."
+
+10. "The `Enter` key overlaps with `Del`. Please shorten the `# ~` key and fit the `Enter` there." *(with screenshot)*
+
+11. "Please add a `Makefile` targed that creates new release. Something like `make V=0.2.0 release` that updates the version everywhere, tags it in git and adds the changes (from git log) to @CHANGELOG.md."
+
+12. "If /dev/input/event* isn't readable, in addition to logging: sudo usermod -aG input $USER for stronger evdev-level suppression, add it below the \"keys are clean\" hint."
+
+13. "Before the clock on the top add the application title and short description as a header. Make the milliseconds from the clock optional, it is too \"busy\"."
+
+14. "Nice. Append the prompts I used to PROMPT.md in the project root. Make release 0.9.0, tag it and commit (without PROMPT.md)."
