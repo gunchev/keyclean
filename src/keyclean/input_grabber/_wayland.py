@@ -69,25 +69,30 @@ def _probe_compositor_support() -> bool:
     return found
 
 
-def _check_dev_input_access() -> None:
-    """Log an informational notice if /dev/input/* is not readable.
+def _check_dev_input_access() -> str | None:
+    """Return a UI notice (and log it) if /dev/input/* is not readable.
 
     Readability of /dev/input/ is not required for the current
     (SDL2-based) grab method, but it enables a stronger evdev-level
-    grab (Option B).  Guide the user on how to obtain it.
+    grab (Option B).  Returns the notice string so the caller can
+    surface it in the UI, or None when no notice is needed.
     """
     devices = glob.glob("/dev/input/event*")
     if not devices:
-        return  # No input devices found — unusual, skip.
+        return None  # No input devices found — unusual, skip.
 
     if not os.access(devices[0], os.R_OK):
+        user = os.environ.get("USER", "$USER")
+        notice = f"For stronger Wayland key suppression: sudo usermod -aG input {user}"
         logger.info(
             "Your user cannot read /dev/input/event* devices. "
             "For stronger Wayland input suppression (evdev-level) add yourself "
             "to the 'input' group and log out/in:\n"
             "    sudo usermod -aG input %s",
-            os.environ.get("USER", "$USER"),
+            user,
         )
+        return notice
+    return None
 
 
 class WaylandGrabber(AbstractGrabber):
@@ -143,7 +148,7 @@ class WaylandGrabber(AbstractGrabber):
         # ------------------------------------------------------------------ #
         # 4. Inform the user about /dev/input access for Option B
         # ------------------------------------------------------------------ #
-        _check_dev_input_access()
+        self.ui_notice = _check_dev_input_access()
 
         self.active = True
         logger.info(

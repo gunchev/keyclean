@@ -133,6 +133,7 @@ class TestWaylandGrabber:
             with caplog.at_level(logging.INFO):
                 g.grab()
         assert "usermod" in caplog.text
+        assert g.ui_notice is not None and "usermod" in g.ui_notice
 
 
 class TestGetGrabberFactory:

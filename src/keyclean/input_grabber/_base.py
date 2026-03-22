@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from typing import Optional
 
 
 class AbstractGrabber(ABC):
@@ -16,6 +17,9 @@ class AbstractGrabber(ABC):
 
     #: Set to True when the grabber operates in best-effort / fallback mode.
     is_fallback: bool = False
+
+    #: Optional one-line notice to display in the UI after grab() is called.
+    ui_notice: Optional[str] = None
 
     @abstractmethod
     def grab(self) -> None:

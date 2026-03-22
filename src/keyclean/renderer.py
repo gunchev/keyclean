@@ -125,6 +125,7 @@ class Renderer:  # pylint: disable=too-few-public-methods
         strike_count: int,
         *,
         warning: Optional[str] = None,
+        notice: Optional[str] = None,
         mouse_pos: Optional[Tuple[int, int]] = None,
     ) -> pygame.Rect:
         """Draw the full UI.  Returns the Done button Rect for hit-testing."""
@@ -132,7 +133,7 @@ class Renderer:  # pylint: disable=too-few-public-methods
         self._draw_datetime(surface)
         self._draw_keyboard(surface, pressed_keys)
         self._draw_counter(surface, strike_count)
-        self._draw_help(surface)
+        self._draw_help(surface, notice)
         self._draw_done_button(surface, mouse_pos)
         if warning:
             self._draw_warning(surface, warning)
@@ -197,13 +198,16 @@ class Renderer:  # pylint: disable=too-few-public-methods
         y = kbd_bottom + int(self._key_h * 0.4)
         surface.blit(surf, (x, y))
 
-    def _draw_help(self, surface: pygame.Surface) -> None:
+    def _draw_help(self, surface: pygame.Surface, notice: Optional[str] = None) -> None:
         text = f'Type "{config.EXIT_PHRASE}" or click Done to exit'
         surf = self._font_help.render(text, True, config.COLOR_HELP_TEXT)
-        x = (self._sw - surf.get_width()) // 2
         kbd_bottom = max(r.bottom for r in self._key_rects.values())
         y = kbd_bottom + int(self._key_h * 0.4)
-        surface.blit(surf, (x, y))
+        surface.blit(surf, ((self._sw - surf.get_width()) // 2, y))
+        if notice:
+            nsurf = self._font_help.render(notice, True, config.COLOR_NOTICE_TEXT)
+            y += surf.get_height() + int(self._key_h * 0.15)
+            surface.blit(nsurf, ((self._sw - nsurf.get_width()) // 2, y))
 
     def _draw_done_button(
         self,

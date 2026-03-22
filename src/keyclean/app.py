@@ -61,6 +61,7 @@ class App:  # pylint: disable=too-few-public-methods
         clock = pygame.time.Clock()
 
         with self._grabber:
+            notice = self._grabber.ui_notice
             self._running = True
             while self._running:
                 mouse_pos = pygame.mouse.get_pos()
@@ -70,6 +71,7 @@ class App:  # pylint: disable=too-few-public-methods
                     self._pressed_keys,
                     self._strike_count,
                     warning=warning,
+                    notice=notice,
                     mouse_pos=mouse_pos,
                 )
                 _ = done_rect   # used for hit-testing in _process_events via stored ref
