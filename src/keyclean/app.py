@@ -101,6 +101,10 @@ class App:  # pylint: disable=too-few-public-methods
             elif event.type == pygame.KEYUP:
                 self._pressed_keys.discard(event.key)
 
+            elif event.type == pygame.WINDOWFOCUSGAINED:
+                if self._grabber is not None:
+                    self._grabber.regrab()
+
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and self._renderer is not None:
                     # Re-draw is already scheduled; check Done button hit.

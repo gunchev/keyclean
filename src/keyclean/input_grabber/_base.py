@@ -29,6 +29,9 @@ class AbstractGrabber(ABC):
     def release(self) -> None:
         """Deactivate input suppression."""
 
+    def regrab(self) -> None:
+        """Re-assert the grab after a focus-regain event.  No-op by default."""
+
     def __enter__(self) -> "AbstractGrabber":
         self.grab()
         return self

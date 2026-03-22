@@ -132,6 +132,20 @@ class WaylandGrabber(AbstractGrabber):
         #      SDL_SetWindowKeyboardGrab(window, SDL_TRUE)  →
         #        zwp_keyboard_shortcuts_inhibit_manager_v1_inhibit_shortcuts(…)
         # ------------------------------------------------------------------ #
+        self._apply_keyboard_grab()
+
+        # ------------------------------------------------------------------ #
+        # 4. Inform the user about /dev/input access for Option B
+        # ------------------------------------------------------------------ #
+        self.ui_notice = _check_dev_input_access()
+
+        self.active = True
+        logger.info(
+            "Wayland grab active. Ctrl+Alt+F* (TTY switch) cannot be blocked."
+        )
+
+    def _apply_keyboard_grab(self) -> None:
+        """Assert SDL2 keyboard grab (→ Wayland shortcuts inhibit)."""
         try:
             win = pygame.Window.from_display_module()  # type: ignore[attr-defined]
             win.keyboard_grab = True  # type: ignore[attr-defined]
@@ -145,15 +159,11 @@ class WaylandGrabber(AbstractGrabber):
                 "using pygame.event.set_grab(True) instead."
             )
 
-        # ------------------------------------------------------------------ #
-        # 4. Inform the user about /dev/input access for Option B
-        # ------------------------------------------------------------------ #
-        self.ui_notice = _check_dev_input_access()
-
-        self.active = True
-        logger.info(
-            "Wayland grab active. Ctrl+Alt+F* (TTY switch) cannot be blocked."
-        )
+    def regrab(self) -> None:
+        """Re-assert keyboard grab after focus regain."""
+        if self.active:
+            logger.debug("Re-asserting keyboard grab after focus regain.")
+            self._apply_keyboard_grab()
 
     def release(self) -> None:
         if self.active:
