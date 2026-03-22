@@ -90,7 +90,7 @@ keyclean/
 │       ├── app.py             # main App class, game loop, exit handling
 │       ├── config.py          # constants: colors, sizes, exit phrase, FPS
 │       ├── keyboard_layout.py # ISO 105-key definitions: positions, sizes, labels, keycodes
-│       ├── renderer.py        # draws keyboard, highlights, counter, "Done" button
+│       ├── renderer.py        # draws date and time on top "+%Y-%m-%d %H:%M:%S.%N %z %Z", keyboard in the middle, highlights, counter, help text, "Done" button
 │       ├── safety_sequence.py # ring buffer of typed chars, checks for "keys are clean"
 │       └── input_grabber/
 │           ├── __init__.py    # get_grabber() factory
