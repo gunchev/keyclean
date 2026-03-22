@@ -1,3 +1,19 @@
+## 0.9.0 — 2026-03-22
+
+### Changes since beginning
+
+- f0a2b04 Add uv run keyclean to README usage examples
+- 785119a Add app header above clock; make milliseconds optional
+- 2e9f934 Show /dev/input hint in UI below exit-phrase help text
+- b09c869 Add make release target
+- d42cc72 Fix Enter key overlapping Del — shorten #~ and backslash, shift Enter left
+- d71cb0d Fix Wayland Super key leak — explicit zwp_keyboard_shortcuts_inhibit_manager_v1
+- 0c4fb12 Add Development section to README, fix uv dep groups, add py314 to tox
+- 0703c7b Silence pygame setuptools related depecation warnings.
+- bdd632d Initial implementation of KeyClean 0.1.0
+- 47251bc Minor plan adjustment, .gitignore.
+- 0154a64 Start.
+
 # Changelog
 
 ## 0.1.0 — 2026-03-22
