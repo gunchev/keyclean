@@ -1,0 +1,87 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "keyclean"
+version = "0.1.0"
+description = "Cross-platform keyboard cleaning utility — lock your keyboard, wipe it clean."
+readme = "README.md"
+license = "Unlicense"
+requires-python = ">=3.9"
+authors = [
+    { name = "Doncho Nikolaev Gunchev" },
+]
+keywords = ["keyboard", "cleaning", "utility", "pygame"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: X11 Applications",
+    "Environment :: MacOS X",
+    "Environment :: Win32 (MS Windows)",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: The Unlicense (Unlicense)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Utilities",
+    "Typing :: Typed",
+]
+dependencies = [
+    "pygame-ce>=2.4.0",
+]
+
+[project.optional-dependencies]
+linux = [
+    "python-xlib>=0.33",
+]
+macos = [
+    "pyobjc-framework-Quartz>=9.0",
+]
+windows = []
+grab = [
+    "pynput>=1.7.6",
+]
+dev = [
+    "autopep8",
+    "pylint",
+    "pytest",
+    "pytest-mock",
+    "pytest-cov",
+    "tox",
+    "twine",
+    "build",
+    "pynput>=1.7.6",
+    "python-xlib>=0.33; sys_platform == 'linux'",
+]
+
+[project.scripts]
+keyclean = "keyclean.app:main"
+
+[project.gui-scripts]
+keyclean-gui = "keyclean.app:main"
+
+[project.urls]
+Homepage = "https://github.com/gunchev/keyclean"
+Repository = "https://github.com/gunchev/keyclean"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/keyclean"]
+
+[tool.pylint.main]
+source-roots = ["src"]
+
+[tool.pylint.format]
+max-line-length = 120
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.autopep8]
+max_line_length = 120
+recursive = true
+in-place = true
