@@ -68,7 +68,9 @@ DONE_BUTTON_MARGIN: int = 20   # from bottom-right corner
 # --------------------------------------------------------------------------- #
 # Application header
 # --------------------------------------------------------------------------- #
-APP_TITLE: str = "KeyClean"
+from keyclean import __version__ as _version  # pylint: disable=wrong-import-position
+
+APP_TITLE: str = f"KeyClean  v{_version}"
 APP_DESCRIPTION: str = "Lock your keyboard, wipe it clean."
 
 # --------------------------------------------------------------------------- #
