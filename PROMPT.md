@@ -136,3 +136,19 @@ allowing users to wipe their physical keyboard without triggering commands.
 26. "`__init__.py` in the release shows `0.9.5-dev` instead of `0.9.4`."
 
 27. "Add all prompts missing from @PROMPT.md, this one included, commit, then `make release V=0.9.5` please."
+
+28. "On MacOS I noticed a warning that some dependency is missing. I used `uv tool install keyclean`. Is it also missing/optional, like `evdev` was on Linux?"
+
+29. "On MacOS I also noticed that the arrow keys have boxes instead of arrows (missing font glyphs?)."
+
+30. "Next to the left Shift there is an extra `\|` button, remove it and enlarge the shift key."
+
+31. "Move the first line of keys, `Esc` ... `F12` ... `Pause` a bit up, doubling the distance they have from the second line. Align `Print Screen` with `Ins` and `Del` horizontally. Align the right side of the `Enter` key with `Backspace` and the right `Shift`."
+
+32. "Add more spacing to the first row (`Esc` .. `F12`) so that `F12` aligns with `Backspace` on the right. Remove the `#~` key on the bottom left of the `Enter` key and join the space to the `Enter` key. Expand the `\|` key on the left top of the `Enter` key to normal width, taking the space from `Enter`. Move the `Enter` label down to use the newly joined space."
+
+33. "Auch, make the `Enter` key only use the second line. Shift `\|` right to not overlap with `]}` and extend it right to align with `Backspace`."
+
+34. "Perfection. Now, you mentioned something about handling negative rows. Won't shifting everything a bit down solve that problem?"
+
+35. "Nice. Add all prompts to @PROMPT.md and create a new release please."
