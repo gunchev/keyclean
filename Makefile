@@ -104,12 +104,16 @@ release:
 .PHONY: clean
 clean:
 	-python3 -m coverage erase
-	-python3 -m pip uninstall -y "$(name)"
-	find . -depth \( -name '*.pyc' -o -name '__pycache__' -o -name '__pypackages__' \
-		-o -name '*.pyc' -o -name '*.pyd' -o -name '*.pyo' -o -name '*.egg-info' \
-		-o -name '*.py,cover'  \) -not -path "./.?*/*" \
-		-exec rm -rf \{\} \;
-	rm -rf site.py build/ dist/ "$(name).spec" VERSION bin/ .tox/ .pytest_cache/
+	find "$(TOP)" -depth \( \
+		-name '__pycache__' \
+		-o -name '*.pyc' \
+		-o -name '*.pyo' \
+		-o -name '*.pyd' \
+		-o -name '*.egg-info' \
+		-o -name '*.py,cover' \
+	\) -not -path '*/.git/*' -exec rm -rf {} +
+	rm -rf "$(TOP)/build/" "$(TOP)/dist/" "$(TOP)/.tox/" \
+		"$(TOP)/.pytest_cache/" "$(TOP)/.coverage"
 
 
 # https://packaging.python.org/en/latest/guides/using-testpypi/
