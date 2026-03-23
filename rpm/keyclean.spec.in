@@ -14,9 +14,9 @@ BuildRequires:  python3-devel
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  desktop-file-utils
 
-# pygame-ce may not yet be in the Fedora repos; install from PyPI if needed:
-#   pip install pygame-ce
-Requires:       python3dist(pygame-ce) >= 2.4.0
+# Accept either pygame (Fedora repos: python3-pygame) or pygame-ce (PyPI fork).
+# Both expose the same API used by keyclean.
+Requires:       (python3-pygame >= 2.1.0 or python3dist(pygame-ce) >= 2.4.0)
 Requires:       python3dist(evdev) >= 1.7.0
 
 %description
