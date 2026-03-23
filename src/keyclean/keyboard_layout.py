@@ -16,12 +16,10 @@ The layout is rendered at runtime scaled to the actual screen resolution.
 Column and row values are in *units* where 1 unit = KEY_UNIT + KEY_GAP pixels.
 
 ISO specifics vs ANSI:
-  - Backslash key is 1u wide and sits left of Enter's top stem on the main block.
+  - Backslash key is 1.5u wide (col 13.5–15.0), right-aligned with Backspace.
   - Left Shift is 2.25u (ISO extra key omitted — no standard keycode).
-  - Enter is an upside-down L shape drawn as two rects:
-      'enter'     — top stem only (col 14–15, row 2), no label
-      'enter_ext' — bottom body (col 12.75–15, row 3), carries the 'Enter' label;
-                    highlight_key=K_RETURN so it lights up with the top stem.
+  - Enter is drawn as a single rect in row 3 only ('enter_ext', col 12.75–15.0).
+    The row-2 top stem is omitted; backslash fills that space to the right edge.
 """
 
 from __future__ import annotations
@@ -98,8 +96,8 @@ _ROW1: List[KeyDef] = [
 ]
 
 # ---------------------------------------------------------------------------
-# Row 2 — QWERTY row  (Tab Q W E R T Y U I O P [ ] \)
-# ISO: Backslash is 1u, to the left of Enter (which extends down to row 3).
+# Row 2 — QWERTY row  (Tab Q W E R T Y U I O P [ ] \|)
+# ISO: Backslash is 1.5u (col 13.5–15.0), right-aligned with Backspace.
 # ---------------------------------------------------------------------------
 _ROW2: List[KeyDef] = [
     KeyDef("tab",    "Tab",      0.0,  2, 1.5, 1.0, pygame.K_TAB),
@@ -115,15 +113,13 @@ _ROW2: List[KeyDef] = [
     KeyDef("p",      "P",        10.5, 2, 1.0, 1.0, pygame.K_p),
     KeyDef("lbrace", "[\n{",     11.5, 2, 1.0, 1.0, pygame.K_LEFTBRACKET),
     KeyDef("rbrace", "]\n}",     12.5, 2, 1.0, 1.0, pygame.K_RIGHTBRACKET),
-    # ISO backslash — 1u wide, left of Enter's top stem
-    KeyDef("backslash", "\\\n|", 13.0, 2, 1.0, 1.0, pygame.K_BACKSLASH),
-    # ISO Enter top stem only (row 2); no label — label lives on enter_ext below
-    KeyDef("enter",  "",          14.0, 2, 1.0, 1.0, pygame.K_RETURN),
+    # ISO backslash — starts after ]}, extends right to align with Backspace (col 15.0)
+    KeyDef("backslash", "\\\n|", 13.5, 2, 1.5, 1.0, pygame.K_BACKSLASH),
 ]
 
 # ---------------------------------------------------------------------------
-# Row 3 — Home row  (Caps A S D F G H J K L ; ' Enter-ext)
-# ISO Enter bottom body spans cols 12.75–15.0; hash/tilde key removed.
+# Row 3 — Home row  (Caps A S D F G H J K L ; ' Enter)
+# Enter occupies cols 12.75–15.0 (right-aligned with Backspace and RShift).
 # ---------------------------------------------------------------------------
 _ROW3: List[KeyDef] = [
     KeyDef("caps",   "Caps",     0.0,  3, 1.75, 1.0, pygame.K_CAPSLOCK),
@@ -138,11 +134,8 @@ _ROW3: List[KeyDef] = [
     KeyDef("l",      "L",        9.75, 3, 1.0,  1.0, pygame.K_l),
     KeyDef("semi",   ";\n:",     10.75, 3, 1.0, 1.0, pygame.K_SEMICOLON),
     KeyDef("quote",  "'\n\"",    11.75, 3, 1.0, 1.0, pygame.K_QUOTE),
-    # ISO Enter bottom body — wider than the top stem, carries the label.
-    # pygame_key=None so it doesn't duplicate K_RETURN in PYGAME_KEY_MAP;
-    # highlight_key=K_RETURN makes it light up together with the top stem.
-    KeyDef("enter_ext", "Enter", 12.75, 3, 2.25, 1.0,
-           pygame_key=None, highlight_key=pygame.K_RETURN),
+    # ISO Enter — occupies the full bottom body of the L-shape.
+    KeyDef("enter_ext", "Enter", 12.75, 3, 2.25, 1.0, pygame.K_RETURN),
 ]
 
 # ---------------------------------------------------------------------------

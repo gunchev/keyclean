@@ -45,10 +45,9 @@ class TestKeyboardLayout:
             assert key.height > 0, f"{key.key_id} has height=0"
 
     def test_all_keys_have_labels(self) -> None:
-        # Space bar and the ISO Enter top stem are allowed to have empty labels.
-        _unlabeled = {"space", "enter"}
         for key in KEYS:
-            if key.key_id not in _unlabeled:
+            # Space bar is allowed to have an empty label
+            if key.key_id != "space":
                 assert key.label.strip(), f"{key.key_id} has an empty label"
 
     def test_lshift_wider_than_one_unit(self) -> None:
