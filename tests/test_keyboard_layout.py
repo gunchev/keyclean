@@ -74,7 +74,7 @@ class TestKeyboardLayout:
 
     def test_key_rows_in_valid_range(self) -> None:
         for key in KEYS:
-            assert -1 <= key.row <= 6, f"{key.key_id} has invalid row {key.row}"
+            assert 0 <= key.row <= 6, f"{key.key_id} has invalid row {key.row}"
 
     def test_key_cols_non_negative(self) -> None:
         for key in KEYS:

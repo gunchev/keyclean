@@ -61,9 +61,7 @@ class Renderer:  # pylint: disable=too-few-public-methods
 
         # Compute scale factor so the keyboard fits horizontally with margin.
         max_col_right = max(k.col + k.width for k in KEYS)
-        min_row = min(k.row for k in KEYS)
-        max_row_bottom = max(k.row + k.height for k in KEYS)
-        row_span = max_row_bottom - min_row
+        row_span = max(k.row + k.height for k in KEYS)
 
         # Reserve top area for title + description + datetime, bottom for counter/help/done.
         top_reserve = int(screen_h * 0.18)
@@ -82,9 +80,7 @@ class Renderer:  # pylint: disable=too-few-public-methods
         kbd_pixel_h = row_span * (self._key_h + self._gap)
 
         self._kbd_x = (screen_w - kbd_pixel_w) / 2
-        # kbd_y is the pixel reference for row=0; rows above it (negative) sit above it.
-        kbd_top = top_reserve + (kbd_area_h - kbd_pixel_h) / 2
-        self._kbd_y = kbd_top - min_row * (self._key_h + self._gap)
+        self._kbd_y = top_reserve + (kbd_area_h - kbd_pixel_h) / 2
 
         # Pre-compute pixel rects for each key
         self._key_rects: dict[str, pygame.Rect] = {}
