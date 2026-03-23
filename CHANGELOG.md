@@ -1,3 +1,10 @@
+## 0.9.8 — 2026-03-23
+
+### Changes since v0.9.7
+
+- 921e041 Fix macOS SIGTRAP crash: check AXIsProcessTrusted before pynput
+- 8680565 Start 0.9.8-dev
+
 ## 0.9.7 — 2026-03-23
 
 ### Changes since v0.9.6
