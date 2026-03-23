@@ -1,3 +1,11 @@
+## 0.9.2 — 2026-03-23
+
+### Changes since v0.9.1
+
+- 8a8050a Make 'run' target cross-platform via uname OS detection
+- c2cdad9 Add 'make run' target for development
+- cc2488e A bit more detailed coverage.
+
 ## 0.9.1 — 2026-03-23
 
 ### Changes since v0.9.0
