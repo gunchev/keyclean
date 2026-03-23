@@ -40,32 +40,36 @@ class KeyDef:
     pygame_key: Optional[int] = None
 
 
+# Nav/numpad column offset — defined here so _ROW0 can reference it for
+# PrtSc/ScrLk/Pause alignment above the Ins/Home/PgUp column.
+_NAV_OFFSET: float = 15.5
+
 # ---------------------------------------------------------------------------
 # Row 0 — Escape + F-keys + system keys
+# Sits 0.5u above row 1, creating a visible gap matching real keyboards.
+# PrtSc/ScrLk/Pause are aligned with Ins/Home/PgUp below them.
 # ---------------------------------------------------------------------------
-# Columns:  Esc at 0, gap at 1, F1-F4 at 2-5, gap at 6, F5-F8 at 7-10,
-#           gap at 11, F9-F12 at 12-15, gap at 16, PrtSc/ScrLk/Pause at 17-19
 _ROW0: List[KeyDef] = [
-    KeyDef("esc",    "Esc",      0.0,  0, 1.0, 1.0, pygame.K_ESCAPE),
+    KeyDef("esc",    "Esc",      0.0,   -0.5, 1.0, 1.0, pygame.K_ESCAPE),
     # gap of 0.5u between Esc and F1
-    KeyDef("f1",     "F1",       1.5,  0, 1.0, 1.0, pygame.K_F1),
-    KeyDef("f2",     "F2",       2.5,  0, 1.0, 1.0, pygame.K_F2),
-    KeyDef("f3",     "F3",       3.5,  0, 1.0, 1.0, pygame.K_F3),
-    KeyDef("f4",     "F4",       4.5,  0, 1.0, 1.0, pygame.K_F4),
+    KeyDef("f1",     "F1",       1.5,   -0.5, 1.0, 1.0, pygame.K_F1),
+    KeyDef("f2",     "F2",       2.5,   -0.5, 1.0, 1.0, pygame.K_F2),
+    KeyDef("f3",     "F3",       3.5,   -0.5, 1.0, 1.0, pygame.K_F3),
+    KeyDef("f4",     "F4",       4.5,   -0.5, 1.0, 1.0, pygame.K_F4),
     # gap of 0.25u between F4 and F5
-    KeyDef("f5",     "F5",       5.75, 0, 1.0, 1.0, pygame.K_F5),
-    KeyDef("f6",     "F6",       6.75, 0, 1.0, 1.0, pygame.K_F6),
-    KeyDef("f7",     "F7",       7.75, 0, 1.0, 1.0, pygame.K_F7),
-    KeyDef("f8",     "F8",       8.75, 0, 1.0, 1.0, pygame.K_F8),
+    KeyDef("f5",     "F5",       5.75,  -0.5, 1.0, 1.0, pygame.K_F5),
+    KeyDef("f6",     "F6",       6.75,  -0.5, 1.0, 1.0, pygame.K_F6),
+    KeyDef("f7",     "F7",       7.75,  -0.5, 1.0, 1.0, pygame.K_F7),
+    KeyDef("f8",     "F8",       8.75,  -0.5, 1.0, 1.0, pygame.K_F8),
     # gap of 0.25u between F8 and F9
-    KeyDef("f9",     "F9",       10.0, 0, 1.0, 1.0, pygame.K_F9),
-    KeyDef("f10",    "F10",      11.0, 0, 1.0, 1.0, pygame.K_F10),
-    KeyDef("f11",    "F11",      12.0, 0, 1.0, 1.0, pygame.K_F11),
-    KeyDef("f12",    "F12",      13.0, 0, 1.0, 1.0, pygame.K_F12),
-    # gap of 0.25u
-    KeyDef("prtsc",  "Prt\nSc",  14.25, 0, 1.0, 1.0, pygame.K_PRINTSCREEN),
-    KeyDef("scrlk",  "Scr\nLk",  15.25, 0, 1.0, 1.0, pygame.K_SCROLLLOCK),
-    KeyDef("pause",  "Pause",    16.25, 0, 1.0, 1.0, pygame.K_PAUSE),
+    KeyDef("f9",     "F9",       10.0,  -0.5, 1.0, 1.0, pygame.K_F9),
+    KeyDef("f10",    "F10",      11.0,  -0.5, 1.0, 1.0, pygame.K_F10),
+    KeyDef("f11",    "F11",      12.0,  -0.5, 1.0, 1.0, pygame.K_F11),
+    KeyDef("f12",    "F12",      13.0,  -0.5, 1.0, 1.0, pygame.K_F12),
+    # Aligned with Ins/Home/PgUp in the nav cluster below
+    KeyDef("prtsc",  "Prt\nSc",  _NAV_OFFSET + 0.0, -0.5, 1.0, 1.0, pygame.K_PRINTSCREEN),
+    KeyDef("scrlk",  "Scr\nLk",  _NAV_OFFSET + 1.0, -0.5, 1.0, 1.0, pygame.K_SCROLLLOCK),
+    KeyDef("pause",  "Pause",    _NAV_OFFSET + 2.0, -0.5, 1.0, 1.0, pygame.K_PAUSE),
 ]
 
 # ---------------------------------------------------------------------------
@@ -108,8 +112,8 @@ _ROW2: List[KeyDef] = [
     KeyDef("rbrace", "]\n}",     12.5, 2, 1.0, 1.0, pygame.K_RIGHTBRACKET),
     # ISO backslash — shortened to 0.5u so Enter can start at col 14.0
     KeyDef("backslash", "\\\n|", 13.5, 2, 0.5, 1.0, pygame.K_BACKSLASH),
-    # ISO tall Enter — starts at 14.0, ends at 15.5 (= _NAV_OFFSET), no overlap with Del
-    KeyDef("enter",  "Enter",    14.0, 2, 1.5, 2.0, pygame.K_RETURN),
+    # ISO tall Enter — right edge at 15.0, aligned with Backspace and RShift
+    KeyDef("enter",  "Enter",    14.0, 2, 1.0, 2.0, pygame.K_RETURN),
 ]
 
 # ---------------------------------------------------------------------------
@@ -168,10 +172,8 @@ _ROW5: List[KeyDef] = [
 
 # ---------------------------------------------------------------------------
 # Navigation cluster  (Insert Delete | Home End | PgUp PgDn | Up | Left Down Right)
-# Placed to the right of the main block.  Col offset = 15.5u from left.
+# Col offset = _NAV_OFFSET (15.5u).  PrtSc/ScrLk/Pause in row 0 align above.
 # ---------------------------------------------------------------------------
-_NAV_OFFSET: float = 15.5
-
 _NAV: List[KeyDef] = [
     # Row 1
     KeyDef("insert", "Ins",     _NAV_OFFSET + 0.0, 1, 1.0, 1.0, pygame.K_INSERT),
