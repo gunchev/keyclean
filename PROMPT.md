@@ -116,3 +116,5 @@ allowing users to wipe their physical keyboard without triggering commands.
 16. Nope, same story. Maybe take a look how @~/github/gunchev/kbdclean/ does it, there is no problem with Super.
 
 17. Put the release part in a separate python script `release.py`, clean the Makefile.
+
+18. Clean and fix the "clean" target in the @Makefile.

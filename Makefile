@@ -104,14 +104,8 @@ release:
 .PHONY: clean
 clean:
 	-python3 -m coverage erase
-	find "$(TOP)" -depth \( \
-		-name '__pycache__' \
-		-o -name '*.pyc' \
-		-o -name '*.pyo' \
-		-o -name '*.pyd' \
-		-o -name '*.egg-info' \
-		-o -name '*.py,cover' \
-	\) -not -path '*/.git/*' -exec rm -rf {} +
+	find "$(TOP)" -depth \( -name '__pycache__' -o -name '*.pyc' -o -name '*.pyo' -o -name '*.pyd' -o -name '*.egg-info' -o -name '*.py,cover' \) \
+		-not -path '*/.git/*' -exec rm -rf {} +
 	rm -rf "$(TOP)/build/" "$(TOP)/dist/" "$(TOP)/.tox/" \
 		"$(TOP)/.pytest_cache/" "$(TOP)/.coverage"
 
