@@ -23,6 +23,8 @@ help:
 	@echo
 	@echo "    release:            tag a new release (required: V=X.Y.Z), e.g. make V=1.0.0 release"
 	@echo
+	@echo "    run:                sync dev environment and run the app (development mode)"
+	@echo
 	@echo "    clean:              clean the build tree"
 	@echo
 	@printf "Makefile debug: name=%q, PYTHONPATH=%q, PIP_FIND_LINKS=%q\n\n" "$(name)" "$(PYTHONPATH)" "$(PIP_FIND_LINKS)"
@@ -93,6 +95,12 @@ rpm: rpmprep
 srpm: rpmprep
 	rpmbuild -bs "$(name).spec" --define "_sourcedir $$PWD/dist"
 	rm "$(name).spec"
+
+
+.PHONY: run
+run:
+	uv sync --group dev --extra linux --extra grab
+	uv run keyclean
 
 
 .PHONY: release
