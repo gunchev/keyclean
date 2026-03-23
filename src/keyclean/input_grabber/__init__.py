@@ -12,6 +12,8 @@ import sys
 
 from keyclean.input_grabber._base import AbstractGrabber
 
+__all__ = ["get_grabber", "AbstractGrabber"]
+
 logger = logging.getLogger(__name__)
 
 

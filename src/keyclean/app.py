@@ -9,8 +9,7 @@ from typing import Optional, Set
 import pygame
 
 from keyclean import config
-from keyclean.input_grabber import get_grabber
-from keyclean.input_grabber._base import AbstractGrabber
+from keyclean.input_grabber import AbstractGrabber, get_grabber
 from keyclean.renderer import Renderer
 from keyclean.safety_sequence import SafetySequence
 
