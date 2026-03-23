@@ -50,9 +50,9 @@ class TestKeyboardLayout:
             if key.key_id != "space":
                 assert key.label.strip(), f"{key.key_id} has an empty label"
 
-    def test_iso_extra_key_present(self) -> None:
-        ids = {k.key_id for k in KEYS}
-        assert "iso_extra" in ids, "ISO extra key (between LShift and Z) missing"
+    def test_lshift_wider_than_one_unit(self) -> None:
+        lshift = next(k for k in KEYS if k.key_id == "lshift")
+        assert lshift.width >= 2.0, "Left Shift should be at least 2u wide"
 
     def test_numpad_keys_present(self) -> None:
         np_ids = {k.key_id for k in KEYS if k.key_id.startswith("np_")}

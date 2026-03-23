@@ -15,8 +15,7 @@ Column and row values are in *units* where 1 unit = KEY_UNIT + KEY_GAP pixels.
 
 ISO specifics vs ANSI:
   - Backslash key is 1u wide (not 1.5u) and sits left of Enter on the main block.
-  - Left Shift is 1.25u (not 2.25u).
-  - Extra ISO key (key_id="iso_extra") is 1u, between Left Shift and Z.
+  - Left Shift is 2.25u (ISO extra key omitted — no standard keycode).
   - Enter is an upside-down L shape (approximated as two adjacent keys in the layout;
     we draw it as a single tall key spanning rows 2–3 at the right of the alpha block).
 """
@@ -136,13 +135,10 @@ _ROW3: List[KeyDef] = [
 ]
 
 # ---------------------------------------------------------------------------
-# Row 4 — Bottom row  (LShift iso_extra Z X C V B N M , . / RShift)
-# ISO: LShift is 1.25u, then the extra ISO key (1u), then Z starts at 2.25.
+# Row 4 — Bottom row  (LShift Z X C V B N M , . / RShift)
 # ---------------------------------------------------------------------------
 _ROW4: List[KeyDef] = [
-    KeyDef("lshift", "Shift",    0.0,  4, 1.25, 1.0, pygame.K_LSHIFT),
-    # ISO extra key (between Left Shift and Z) — no standard pygame constant
-    KeyDef("iso_extra", "\\\n|", 1.25, 4, 1.0,  1.0, None),
+    KeyDef("lshift", "Shift",    0.0,  4, 2.25, 1.0, pygame.K_LSHIFT),
     KeyDef("z",      "Z",        2.25, 4, 1.0,  1.0, pygame.K_z),
     KeyDef("x",      "X",        3.25, 4, 1.0,  1.0, pygame.K_x),
     KeyDef("c",      "C",        4.25, 4, 1.0,  1.0, pygame.K_c),
