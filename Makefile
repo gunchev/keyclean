@@ -39,7 +39,7 @@ test:
 
 .PHONY: coverage
 coverage:
-	pytest --cov=.
+	pytest -v --cov . --cov-report=term-missing
 
 
 .PHONY: lint
