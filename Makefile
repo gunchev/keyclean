@@ -21,16 +21,11 @@ help:
 	@echo
 	@echo "    build:              build the source and whl package, look for */dist/*.whl"
 	@echo
-	@echo "    release:            tag a new release (required: V=X.Y.Z)"
-	@echo "                        updates version in pyproject.toml + __init__.py,"
-	@echo "                        prepends git log to CHANGELOG.md, commits, tags."
-	@echo "                        Example: make V=0.2.0 release"
+	@echo "    release:            tag a new release (required: V=X.Y.Z), e.g. make V=1.0.0 release"
 	@echo
 	@echo "    clean:              clean the build tree"
 	@echo
-	@echo "name='$(name)'"
-	@echo "PYTHONPATH     = '$(PYTHONPATH)'"
-	@echo "PIP_FIND_LINKS = '$(PIP_FIND_LINKS)'"
+	@printf "Makefile debug: name=%q, PYTHONPATH=%q, PIP_FIND_LINKS=%q\n\n" "$(name)" "$(PYTHONPATH)" "$(PIP_FIND_LINKS)"
 
 
 .PHONY: check
@@ -100,62 +95,10 @@ srpm: rpmprep
 	rm "$(name).spec"
 
 
-# Python script that prepends a new section to CHANGELOG.md.
-# Exported as an env var so the recipe can pipe it to python3 via stdin
-# without heredoc/quoting nightmares.
-define _release_py
-import subprocess, datetime, pathlib, sys
-v, top = sys.argv[1], sys.argv[2]
-cl = pathlib.Path(top, "CHANGELOG.md")
-tags = subprocess.check_output(
-    ["git", "-C", top, "tag", "--sort=-version:refname"],
-    text=True
-).strip().splitlines()
-tags = [t for t in tags if t]
-last_tag = tags[0] if tags else None
-log_range = [last_tag + "..HEAD"] if last_tag else []
-commits = subprocess.check_output(
-    ["git", "-C", top, "log"] + log_range +
-    ["--oneline", "--no-decorate", "--no-merges"],
-    text=True
-).strip()
-date = datetime.date.today().isoformat()
-since = last_tag if last_tag else "beginning"
-section = "## " + v + " \u2014 " + date + "\n\n"
-section += "### Changes since " + since + "\n\n"
-if commits:
-    section += "\n".join("- " + c for c in commits.splitlines()) + "\n"
-section += "\n"
-existing = cl.read_text()
-cl.write_text(section + existing)
-n = len(commits.splitlines()) if commits else 0
-print("Updated CHANGELOG.md (" + str(n) + " commit" + ("s" if n != 1 else "") + ")")
-endef
-export _release_py
-
-
 .PHONY: release
 release:
 	@[ -n "$(V)" ] || { echo "Error: V is not set.  Usage: make V=X.Y.Z release"; exit 1; }
-	@printf '%s' "$(V)" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$$' || \
-		{ echo "Error: '$(V)' is not a valid version (expected X.Y.Z)"; exit 1; }
-	@git -C "$(TOP)" diff --quiet HEAD 2>/dev/null || \
-		{ echo "Error: uncommitted changes — commit or stash first"; exit 1; }
-	@git -C "$(TOP)" tag | grep -qxF "v$(V)" && \
-		{ echo "Error: tag v$(V) already exists"; exit 1; } || true
-	@echo "▶ Bumping version to $(V) ..."
-	sed -i 's/^version = ".*"/version = "$(V)"/' "$(TOP)/pyproject.toml"
-	sed -i 's/^__version__ = ".*"/__version__ = "$(V)"/' \
-		"$(TOP)/src/$(name)/__init__.py"
-	@echo "▶ Updating CHANGELOG.md ..."
-	printf '%s\n' "$$_release_py" | python3 - "$(V)" "$(TOP)"
-	@echo "▶ Committing and tagging v$(V) ..."
-	git -C "$(TOP)" add pyproject.toml "src/$(name)/__init__.py" CHANGELOG.md
-	git -C "$(TOP)" commit -m "Release $(V)"
-	git -C "$(TOP)" tag -a "v$(V)" -m "Version $(V)"
-	@echo
-	@echo "✓ Released v$(V).  Push with:"
-	@echo "      git push && git push --tags"
+	python3 "$(TOP)/release.py" "$(V)"
 
 
 .PHONY: clean
