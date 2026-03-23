@@ -1,6 +1,14 @@
 SHELL:=/usr/bin/env bash # Use bash syntax, mitigates dash's printf on Debian
 export TOP:=$(shell dirname "$(abspath $(lastword $(MAKEFILE_LIST)))")
 name:=$(shell basename "$(TOP)")
+_UNAME:=$(shell uname -s 2>/dev/null)
+ifeq ($(_UNAME),Linux)
+  _OS_EXTRA:=--extra linux
+else ifeq ($(_UNAME),Darwin)
+  _OS_EXTRA:=--extra macos
+else
+  _OS_EXTRA:=--extra windows
+endif
 export PIP_FIND_LINKS:=$(abspath $(TOP)/whl_local/)
 export PYTHONPATH:=$(TOP)/src
 
@@ -99,7 +107,7 @@ srpm: rpmprep
 
 .PHONY: run
 run:
-	uv sync --group dev --extra linux --extra grab
+	uv sync --group dev $(_OS_EXTRA) --extra grab
 	uv run keyclean
 
 
