@@ -33,6 +33,7 @@ classifiers = [
 dependencies = [
     "pygame-ce>=2.4.0",
     "evdev>=1.7.0; sys_platform == 'linux'",
+    "pynput>=1.7.0; sys_platform == 'darwin' or sys_platform == 'win32'",
 ]
 
 [project.optional-dependencies]
