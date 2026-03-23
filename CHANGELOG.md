@@ -1,3 +1,9 @@
+## 0.9.3 — 2026-03-23
+
+### Changes since v0.9.2
+
+- 64a9dee Make evdev a core dependency on Linux
+
 ## 0.9.2 — 2026-03-23
 
 ### Changes since v0.9.1

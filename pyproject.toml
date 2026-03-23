@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "keyclean"
-version = "0.9.2"
+version = "0.9.3"
 description = "Cross-platform keyboard cleaning utility — lock your keyboard, wipe it clean."
 readme = "README.md"
 license = "Unlicense"
