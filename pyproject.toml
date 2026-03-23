@@ -68,9 +68,6 @@ dev = [
 [project.scripts]
 keyclean = "keyclean.app:main"
 
-[project.gui-scripts]
-keyclean-gui = "keyclean.app:main"
-
 [project.urls]
 Homepage = "https://github.com/gunchev/keyclean"
 Repository = "https://github.com/gunchev/keyclean"

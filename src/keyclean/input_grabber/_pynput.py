@@ -46,7 +46,22 @@ class PynputGrabber(AbstractGrabber):
             on_release=lambda _key: None,
             suppress=True,
         )
-        self._listener.start()  # type: ignore[union-attr]
+        try:
+            self._listener.start()  # type: ignore[union-attr]
+        except Exception as exc:  # pylint: disable=broad-except
+            # On macOS, CGEventTap creation fails if Accessibility permission
+            # has not been granted in System Preferences → Privacy & Security →
+            # Accessibility.  Degrade gracefully rather than crashing.
+            logger.warning(
+                "pynput listener failed to start (%s). "
+                "On macOS, grant Accessibility permission to the terminal "
+                "or app that launched keyclean, then restart. "
+                "Falling back: keyboard suppression is disabled.",
+                exc,
+            )
+            self._listener = None
+            self.is_fallback = True
+            return
         self.active = True
         logger.info("pynput keyboard listener started (suppress=True).")
 
