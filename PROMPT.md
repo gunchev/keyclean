@@ -118,3 +118,21 @@ allowing users to wipe their physical keyboard without triggering commands.
 17. Put the release part in a separate python script `release.py`, clean the Makefile.
 
 18. Clean and fix the "clean" target in the @Makefile.
+
+19. "Add a `run` make target, that does all the uv sync steps and then uv runs the app. Development mode."
+
+20. "Hey, won't that only work on Linux?"
+
+21. "When I run it locally, everything works, the Super key is captured. When I upload to pypi and run it with `uvx keyclean` the Super key leaks to KDE. What could be wrong, missing dependency?"
+
+22. "Nice, make new release and upload."
+
+23. "Add the version to the first line."
+
+24. "Add `-dev` to the version if there are uncommitted changes or commits after the last tag." *(interrupted after proposal — see next)*
+
+25. "Yes please. And do a release."
+
+26. "`__init__.py` in the release shows `0.9.5-dev` instead of `0.9.4`."
+
+27. "Add all prompts missing from @PROMPT.md, this one included, commit, then `make release V=0.9.5` please."
