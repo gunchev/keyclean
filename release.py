@@ -90,7 +90,23 @@ def main() -> None:
         check=True,
     )
 
-    print(f"\n✓ Released v{v}.  Push with:")
+    # Bump to next dev version so the repo never sits on a release version
+    major, minor, patch = (int(x) for x in v.split("."))
+    dev_v = f"{major}.{minor}.{patch + 1}-dev"
+    print(f"▶ Bumping to {dev_v} ...")
+    init = TOP / "src" / name / "__init__.py"
+    init.write_text(re.sub(r'^__version__ = ".*"', f'__version__ = "{dev_v}"',
+                           init.read_text(), flags=re.MULTILINE))
+    subprocess.run(
+        ["git", "-C", str(TOP), "add", f"src/{name}/__init__.py"],
+        check=True,
+    )
+    subprocess.run(
+        ["git", "-C", str(TOP), "commit", "-m", f"Start {dev_v}"],
+        check=True,
+    )
+
+    print(f"\n✓ Released v{v}, repo now at {dev_v}.  Push with:")
     print("      git push && git push --tags")
 
 
