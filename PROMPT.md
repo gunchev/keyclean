@@ -110,3 +110,9 @@ allowing users to wipe their physical keyboard without triggering commands.
 13. "Before the clock on the top add the application title and short description as a header. Make the milliseconds from the clock optional, it is too \"busy\"."
 
 14. "Nice. Append the prompts I used to PROMPT.md in the project root. Make release 0.9.0, tag it and commit (without PROMPT.md)."
+
+15. For some reason the Super key gets captured by KeyClean, but shortly after KDE's application launcher picks it up too.
+
+16. Nope, same story. Maybe take a look how @~/github/gunchev/kbdclean/ does it, there is no problem with Super.
+
+17. Put the release part in a separate python script `release.py`, clean the Makefile.
