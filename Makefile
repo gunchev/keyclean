@@ -128,12 +128,15 @@ clean:
 
 # https://packaging.python.org/en/latest/guides/using-testpypi/
 # Upload to https://test.pypi.org/
+# release.py builds the distribution at the tagged commit before bumping
+# to the next dev version, so upload must NOT rebuild (that would pick up
+# the -dev __version__).  Just run twine on whatever release.py left in dist/.
 .PHONY: test_upload
-test_upload: build
+test_upload:
 	twine upload --repository testpypi dist/keyclean-*.whl dist/keyclean-*.tar.gz
 
 
 # Upload to https://pypi.org/
 .PHONY: upload
-upload: build
+upload:
 	twine upload dist/keyclean-*.whl dist/keyclean-*.tar.gz

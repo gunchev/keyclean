@@ -90,6 +90,10 @@ def main() -> None:
         check=True,
     )
 
+    # Build the distribution while the tree is at the release version
+    print("▶ Building distribution ...")
+    subprocess.run(["python3", "-m", "build"], check=True, cwd=str(TOP))
+
     # Bump to next dev version so the repo never sits on a release version
     major, minor, patch = (int(x) for x in v.split("."))
     dev_v = f"{major}.{minor}.{patch + 1}-dev"
