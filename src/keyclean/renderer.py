@@ -18,7 +18,7 @@ from typing import Optional, Set, Tuple
 import pygame
 
 from keyclean import config
-from keyclean.keyboard_layout import KEYS, PYGAME_KEY_MAP
+from keyclean.keyboard_layout import KEYS
 
 
 # ---------------------------------------------------------------------------
@@ -192,16 +192,10 @@ class Renderer:  # pylint: disable=too-few-public-methods
         surface.blit(dt_surf, ((self._sw - dt_surf.get_width()) // 2, y))
 
     def _draw_keyboard(self, surface: pygame.Surface, pressed_keys: Set[int]) -> None:
-        # Build set of key_ids that are currently pressed
-        pressed_ids: Set[str] = set()
-        for pk in pressed_keys:
-            kd = PYGAME_KEY_MAP.get(pk)
-            if kd:
-                pressed_ids.add(kd.key_id)
-
         for key in KEYS:
             rect = self._key_rects[key.key_id]
-            pressed = key.key_id in pressed_ids
+            hk = key.highlight_key if key.highlight_key is not None else key.pygame_key
+            pressed = hk is not None and hk in pressed_keys
             bg = config.COLOR_KEY_PRESSED if pressed else config.COLOR_KEY_NORMAL
             border = config.COLOR_KEY_BORDER
 

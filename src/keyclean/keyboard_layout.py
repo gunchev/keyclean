@@ -9,15 +9,19 @@ Each KeyDef describes one physical key:
   - width:    key width in units  (1.0 = standard key)
   - height:   key height in units (1.0 = standard key)
   - pygame_key: pygame.locals K_* constant, or None for keys pygame doesn't map
+  - highlight_key: if set, this pygame key triggers the pressed highlight instead of
+              pygame_key.  Used for multi-rect keys (e.g. ISO Enter extension).
 
 The layout is rendered at runtime scaled to the actual screen resolution.
 Column and row values are in *units* where 1 unit = KEY_UNIT + KEY_GAP pixels.
 
 ISO specifics vs ANSI:
-  - Backslash key is 1u wide (not 1.5u) and sits left of Enter on the main block.
+  - Backslash key is 1u wide and sits left of Enter's top stem on the main block.
   - Left Shift is 2.25u (ISO extra key omitted — no standard keycode).
-  - Enter is an upside-down L shape (approximated as two adjacent keys in the layout;
-    we draw it as a single tall key spanning rows 2–3 at the right of the alpha block).
+  - Enter is an upside-down L shape drawn as two rects:
+      'enter'     — top stem only (col 14–15, row 2), no label
+      'enter_ext' — bottom body (col 12.75–15, row 3), carries the 'Enter' label;
+                    highlight_key=K_RETURN so it lights up with the top stem.
 """
 
 from __future__ import annotations
@@ -38,6 +42,7 @@ class KeyDef:
     width: float = 1.0  # width in grid units
     height: float = 1.0
     pygame_key: Optional[int] = None
+    highlight_key: Optional[int] = None  # overrides pygame_key for pressed highlight
 
 
 # Nav/numpad column offset — defined here so _ROW0 can reference it for
@@ -51,21 +56,21 @@ _NAV_OFFSET: float = 15.5
 # ---------------------------------------------------------------------------
 _ROW0: List[KeyDef] = [
     KeyDef("esc",    "Esc",      0.0,   -0.5, 1.0, 1.0, pygame.K_ESCAPE),
-    # gap of 0.5u between Esc and F1
-    KeyDef("f1",     "F1",       1.5,   -0.5, 1.0, 1.0, pygame.K_F1),
-    KeyDef("f2",     "F2",       2.5,   -0.5, 1.0, 1.0, pygame.K_F2),
-    KeyDef("f3",     "F3",       3.5,   -0.5, 1.0, 1.0, pygame.K_F3),
-    KeyDef("f4",     "F4",       4.5,   -0.5, 1.0, 1.0, pygame.K_F4),
-    # gap of 0.25u between F4 and F5
-    KeyDef("f5",     "F5",       5.75,  -0.5, 1.0, 1.0, pygame.K_F5),
-    KeyDef("f6",     "F6",       6.75,  -0.5, 1.0, 1.0, pygame.K_F6),
-    KeyDef("f7",     "F7",       7.75,  -0.5, 1.0, 1.0, pygame.K_F7),
-    KeyDef("f8",     "F8",       8.75,  -0.5, 1.0, 1.0, pygame.K_F8),
-    # gap of 0.25u between F8 and F9
-    KeyDef("f9",     "F9",       10.0,  -0.5, 1.0, 1.0, pygame.K_F9),
-    KeyDef("f10",    "F10",      11.0,  -0.5, 1.0, 1.0, pygame.K_F10),
-    KeyDef("f11",    "F11",      12.0,  -0.5, 1.0, 1.0, pygame.K_F11),
-    KeyDef("f12",    "F12",      13.0,  -0.5, 1.0, 1.0, pygame.K_F12),
+    # gap of 1.0u between Esc and F1 (doubled from 0.5u)
+    KeyDef("f1",     "F1",       2.0,   -0.5, 1.0, 1.0, pygame.K_F1),
+    KeyDef("f2",     "F2",       3.0,   -0.5, 1.0, 1.0, pygame.K_F2),
+    KeyDef("f3",     "F3",       4.0,   -0.5, 1.0, 1.0, pygame.K_F3),
+    KeyDef("f4",     "F4",       5.0,   -0.5, 1.0, 1.0, pygame.K_F4),
+    # gap of 0.5u between F4 and F5 (doubled from 0.25u)
+    KeyDef("f5",     "F5",       6.5,   -0.5, 1.0, 1.0, pygame.K_F5),
+    KeyDef("f6",     "F6",       7.5,   -0.5, 1.0, 1.0, pygame.K_F6),
+    KeyDef("f7",     "F7",       8.5,   -0.5, 1.0, 1.0, pygame.K_F7),
+    KeyDef("f8",     "F8",       9.5,   -0.5, 1.0, 1.0, pygame.K_F8),
+    # gap of 0.5u between F8 and F9 (doubled from 0.25u)
+    KeyDef("f9",     "F9",       11.0,  -0.5, 1.0, 1.0, pygame.K_F9),
+    KeyDef("f10",    "F10",      12.0,  -0.5, 1.0, 1.0, pygame.K_F10),
+    KeyDef("f11",    "F11",      13.0,  -0.5, 1.0, 1.0, pygame.K_F11),
+    KeyDef("f12",    "F12",      14.0,  -0.5, 1.0, 1.0, pygame.K_F12),
     # Aligned with Ins/Home/PgUp in the nav cluster below
     KeyDef("prtsc",  "Prt\nSc",  _NAV_OFFSET + 0.0, -0.5, 1.0, 1.0, pygame.K_PRINTSCREEN),
     KeyDef("scrlk",  "Scr\nLk",  _NAV_OFFSET + 1.0, -0.5, 1.0, 1.0, pygame.K_SCROLLLOCK),
@@ -110,15 +115,15 @@ _ROW2: List[KeyDef] = [
     KeyDef("p",      "P",        10.5, 2, 1.0, 1.0, pygame.K_p),
     KeyDef("lbrace", "[\n{",     11.5, 2, 1.0, 1.0, pygame.K_LEFTBRACKET),
     KeyDef("rbrace", "]\n}",     12.5, 2, 1.0, 1.0, pygame.K_RIGHTBRACKET),
-    # ISO backslash — shortened to 0.5u so Enter can start at col 14.0
-    KeyDef("backslash", "\\\n|", 13.5, 2, 0.5, 1.0, pygame.K_BACKSLASH),
-    # ISO tall Enter — right edge at 15.0, aligned with Backspace and RShift
-    KeyDef("enter",  "Enter",    14.0, 2, 1.0, 2.0, pygame.K_RETURN),
+    # ISO backslash — 1u wide, left of Enter's top stem
+    KeyDef("backslash", "\\\n|", 13.0, 2, 1.0, 1.0, pygame.K_BACKSLASH),
+    # ISO Enter top stem only (row 2); no label — label lives on enter_ext below
+    KeyDef("enter",  "",          14.0, 2, 1.0, 1.0, pygame.K_RETURN),
 ]
 
 # ---------------------------------------------------------------------------
-# Row 3 — Home row  (Caps A S D F G H J K L ; ' # Enter)
-# ISO Enter occupies col 14.0-15.5 in rows 2-3; no duplicate key here.
+# Row 3 — Home row  (Caps A S D F G H J K L ; ' Enter-ext)
+# ISO Enter bottom body spans cols 12.75–15.0; hash/tilde key removed.
 # ---------------------------------------------------------------------------
 _ROW3: List[KeyDef] = [
     KeyDef("caps",   "Caps",     0.0,  3, 1.75, 1.0, pygame.K_CAPSLOCK),
@@ -133,9 +138,11 @@ _ROW3: List[KeyDef] = [
     KeyDef("l",      "L",        9.75, 3, 1.0,  1.0, pygame.K_l),
     KeyDef("semi",   ";\n:",     10.75, 3, 1.0, 1.0, pygame.K_SEMICOLON),
     KeyDef("quote",  "'\n\"",    11.75, 3, 1.0, 1.0, pygame.K_QUOTE),
-    # hash/tilde — shortened to 1.25u so it ends at col 14.0, aligning with backslash above
-    KeyDef("hash",   "#\n~",     12.75, 3, 1.25, 1.0, pygame.K_HASH),
-    # Enter already defined in _ROW2 (height=2, col=14.0), no duplicate here
+    # ISO Enter bottom body — wider than the top stem, carries the label.
+    # pygame_key=None so it doesn't duplicate K_RETURN in PYGAME_KEY_MAP;
+    # highlight_key=K_RETURN makes it light up together with the top stem.
+    KeyDef("enter_ext", "Enter", 12.75, 3, 2.25, 1.0,
+           pygame_key=None, highlight_key=pygame.K_RETURN),
 ]
 
 # ---------------------------------------------------------------------------
