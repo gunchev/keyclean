@@ -1,3 +1,11 @@
+## 0.9.5 — 2026-03-23
+
+### Changes since v0.9.4
+
+- 58adb5a Update PROMPT.md with prompts 19-27
+- 21e0552 Fix release: build at tagged commit, before dev bump
+- a008dce Start 0.9.5-dev
+
 ## 0.9.4 — 2026-03-23
 
 ### Changes since v0.9.3
