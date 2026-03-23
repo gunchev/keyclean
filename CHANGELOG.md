@@ -1,3 +1,10 @@
+## 0.9.4 — 2026-03-23
+
+### Changes since v0.9.3
+
+- 4487ba5 Post-release dev bump in release.py
+- fdb53e7 Show version in title header
+
 ## 0.9.3 — 2026-03-23
 
 ### Changes since v0.9.2
