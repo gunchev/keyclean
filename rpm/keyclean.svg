@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <!-- Keyboard body -->
+  <rect x="2" y="15" width="44" height="27" rx="4" fill="#1e1e33" stroke="#4466cc" stroke-width="2"/>
+  <!-- Row 1 -->
+  <g fill="#3d5bbf">
+    <rect x="5"  y="18" width="5" height="4" rx="1"/>
+    <rect x="12" y="18" width="5" height="4" rx="1"/>
+    <rect x="19" y="18" width="5" height="4" rx="1"/>
+    <rect x="26" y="18" width="5" height="4" rx="1"/>
+    <rect x="33" y="18" width="5" height="4" rx="1"/>
+    <rect x="40" y="18" width="5" height="4" rx="1"/>
+    <!-- Row 2 -->
+    <rect x="5"  y="24" width="5" height="4" rx="1"/>
+    <rect x="12" y="24" width="5" height="4" rx="1"/>
+    <rect x="19" y="24" width="5" height="4" rx="1"/>
+    <rect x="26" y="24" width="5" height="4" rx="1"/>
+    <rect x="33" y="24" width="5" height="4" rx="1"/>
+    <rect x="40" y="24" width="5" height="4" rx="1"/>
+    <!-- Space bar -->
+    <rect x="12" y="31" width="24" height="5" rx="1"/>
+  </g>
+  <!-- Water drop — "clean" indicator, top-right -->
+  <path d="M 41 2 Q 37 8 37 11 A 4 4 0 0 0 45 11 Q 45 8 41 2 Z"
+        fill="#50b0ff"/>
+</svg>

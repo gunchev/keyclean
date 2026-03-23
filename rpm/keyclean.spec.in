@@ -1,0 +1,66 @@
+Name:           keyclean
+Version:        0.0.0
+Release:        0%{?dist}
+Summary:        Cross-platform keyboard cleaning utility — lock your keyboard, wipe it clean
+
+License:        Unlicense
+URL:            https://github.com/gunchev/keyclean
+Source0:        %{name}-%{version}.tar.gz
+Source1:        %{name}.desktop
+Source2:        %{name}.svg
+
+BuildArch:      noarch
+BuildRequires:  python3-devel
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  desktop-file-utils
+
+# pygame-ce may not yet be in the Fedora repos; install from PyPI if needed:
+#   pip install pygame-ce
+Requires:       python3dist(pygame-ce) >= 2.4.0
+Requires:       python3dist(evdev) >= 1.7.0
+
+%description
+KeyClean is a fullscreen keyboard cleaning utility.  It grabs all keyboard
+input, displays which keys you press on an on-screen layout, and releases
+the keyboard when you type the exit phrase "keys are clean".
+
+Useful when physically cleaning a keyboard without triggering system
+shortcuts or typing into open applications.
+
+
+%prep
+%autosetup
+
+
+%generate_buildrequires
+%pyproject_buildrequires
+
+
+%build
+%pyproject_wheel
+
+
+%install
+%pyproject_install
+%pyproject_save_files -l keyclean
+
+desktop-file-install \
+    --dir=%{buildroot}%{_datadir}/applications \
+    %{SOURCE1}
+
+install -Dm 644 %{SOURCE2} \
+    %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
+
+
+%check
+%pyproject_check_import
+
+
+%files -f %{pyproject_files}
+%doc README.md CHANGELOG.md
+%{_bindir}/keyclean
+%{_datadir}/applications/%{name}.desktop
+%{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
+
+
+%changelog

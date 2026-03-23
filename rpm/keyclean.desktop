@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=KeyClean
+GenericName=Keyboard Cleaner
+Comment=Lock your keyboard, wipe it clean
+Exec=keyclean
+Icon=keyclean
+Terminal=false
+Categories=Utility;
+Keywords=keyboard;clean;maintenance;lock;
+StartupNotify=false

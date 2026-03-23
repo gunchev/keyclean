@@ -31,6 +31,9 @@ help:
 	@echo
 	@echo "    release:            tag a new release (required: V=X.Y.Z), e.g. make V=1.0.0 release"
 	@echo
+	@echo "    rpm:                build RPM and SRPM (required: RPM_VER=X.Y.Z RPM_REV=N)"
+	@echo "    srpm:               build SRPM only  (required: RPM_VER=X.Y.Z RPM_REV=N)"
+	@echo
 	@echo "    run:                sync dev environment and run the app (development mode)"
 	@echo
 	@echo "    clean:              clean the build tree"
@@ -85,23 +88,26 @@ useruninstall: uninstall
 
 .PHONY: rpmprep
 rpmprep:
+	@[ -n "$(RPM_VER)" ] || { echo "Error: RPM_VER is not set.  Usage: make rpm RPM_VER=X.Y.Z RPM_REV=N"; exit 1; }
+	@[ -n "$(RPM_REV)" ] || { echo "Error: RPM_REV is not set.  Usage: make rpm RPM_VER=X.Y.Z RPM_REV=N"; exit 1; }
 	cp "rpm/$(name).spec.in" "$(name).spec"
-	sed -i 's|^Release:.*|Release:        $(RPM_REV)%{?dist}|g' "$(name).spec"
 	sed -i 's|^Version:.*|Version:        $(RPM_VER)|g' "$(name).spec"
-	rm -rf ~/rpmbuild/RPMS/noarch/"$(name)"*.rpm
-	rm -rf ~/rpmbuild/SRPMS/"$(name)"*.src.rpm
-	python3 setup.py sdist
+	sed -i 's|^Release:.*|Release:        $(RPM_REV)%{?dist}|g' "$(name).spec"
+	rm -rf ~/rpmbuild/RPMS/noarch/"$(name)"*.rpm ~/rpmbuild/SRPMS/"$(name)"*.src.rpm
+	python3 -m build --sdist
+	mkdir -p ~/rpmbuild/SOURCES
+	cp dist/$(name)-$(RPM_VER).tar.gz rpm/$(name).desktop rpm/$(name).svg ~/rpmbuild/SOURCES/
 
 
 .PHONY: rpm
 rpm: rpmprep
-	rpmbuild -ba "$(name).spec" --define "_sourcedir $$PWD/dist"
+	rpmbuild -ba "$(name).spec"
 	rm "$(name).spec"
 
 
 .PHONY: srpm
 srpm: rpmprep
-	rpmbuild -bs "$(name).spec" --define "_sourcedir $$PWD/dist"
+	rpmbuild -bs "$(name).spec"
 	rm "$(name).spec"
 
 
