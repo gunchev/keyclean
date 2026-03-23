@@ -25,7 +25,22 @@ from keyclean.keyboard_layout import KEYS, PYGAME_KEY_MAP
 # Helpers
 # ---------------------------------------------------------------------------
 
+# Fonts tried in order; all have good Unicode coverage (including arrow glyphs).
+# match_font returns None when the font is absent, so we skip gracefully.
+_FONT_CANDIDATES = [
+    "DejaVu Sans Mono",   # Linux — usually pre-installed
+    "Menlo",              # macOS — ships with the OS, full Unicode
+    "Consolas",           # Windows — ships with the OS, full Unicode
+    "Courier New",        # broad fallback
+    "monospace",          # pygame generic alias
+]
+
+
 def _load_font(size: int) -> pygame.font.Font:
+    for name in _FONT_CANDIDATES:
+        path = pygame.font.match_font(name)
+        if path:
+            return pygame.font.Font(path, size)
     return pygame.font.SysFont("monospace", size)
 
 
