@@ -152,3 +152,7 @@ allowing users to wipe their physical keyboard without triggering commands.
 34. "Perfection. Now, you mentioned something about handling negative rows. Won't shifting everything a bit down solve that problem?"
 
 35. "Nice. Add all prompts to @PROMPT.md and create a new release please."
+
+36. "Interesting, on MacOS 0.9.5 was working, but 0.9.6 is crashing and I am getting a prompt to reopen it (which does not work). Also, I get `keyclean` and `keyclean-gui`, what is the use of the second script?"
+
+37. "Let's test that. You know the drill, @PROMPT.md, release and I will test."
