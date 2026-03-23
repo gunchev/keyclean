@@ -1,3 +1,10 @@
+## 0.9.9 — 2026-03-23
+
+### Changes since v0.9.8
+
+- c128503 Skip pynput entirely on macOS; fix font loading for arrows
+- 99458a0 Start 0.9.9-dev
+
 ## 0.9.8 — 2026-03-23
 
 ### Changes since v0.9.7
