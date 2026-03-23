@@ -160,3 +160,5 @@ allowing users to wipe their physical keyboard without triggering commands.
 38. "Nope, keeps crashing. I get \"pygame-ce 2.5.7 (SDL 2.32.10, Python 3.14.3)\" and \"Trace/BPT trap: 5          keyclean\" on Mac."
 
 39. "You know the drill, @PROMPT.md, release and I will test."
+
+40. "Interesting, now it shows a crash dialog, which I can close, and then the app shows up. If I grant the accessibility permission to iterm it just crashes, nothing works. And the arrow keys are still just empty squares."

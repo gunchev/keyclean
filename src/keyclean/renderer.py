@@ -28,20 +28,55 @@ from keyclean.keyboard_layout import KEYS
 # Fonts tried in order; all have good Unicode coverage (including arrow glyphs).
 # match_font returns None when the font is absent, so we skip gracefully.
 _FONT_CANDIDATES = [
-    "DejaVu Sans Mono",   # Linux — usually pre-installed
-    "Menlo",              # macOS — ships with the OS, full Unicode
-    "Consolas",           # Windows — ships with the OS, full Unicode
-    "Courier New",        # broad fallback
-    "monospace",          # pygame generic alias
+    "dejavusansmono",     # Linux — usually pre-installed
+    "menlo",              # macOS — ships with the OS
+    "consolas",           # Windows — ships with the OS
+    "couriernew",         # broad fallback
+    "monospace",          # generic alias
+]
+
+# Direct paths for macOS (match_font may not work without fontconfig).
+_MACOS_FONT_PATHS = [
+    "/System/Library/Fonts/Menlo.ttc",
+    "/System/Library/Fonts/Supplemental/Menlo.ttc",
+    "/System/Library/Fonts/Monaco.ttf",
+    "/System/Library/Fonts/Supplemental/Courier New.ttf",
 ]
 
 
 def _load_font(size: int) -> pygame.font.Font:
+    import os as _os
+    import sys as _sys
+
+    # Strategy 1: match_font (works well on Linux with fontconfig).
     for name in _FONT_CANDIDATES:
         path = pygame.font.match_font(name)
         if path:
-            return pygame.font.Font(path, size)
-    return pygame.font.SysFont("monospace", size)
+            try:
+                return pygame.font.Font(path, size)
+            except Exception:  # pylint: disable=broad-except
+                continue
+
+    # Strategy 2: SysFont with each candidate (different lookup on some OS).
+    for name in _FONT_CANDIDATES:
+        try:
+            font = pygame.font.SysFont(name, size)
+            if font is not None:
+                return font
+        except Exception:  # pylint: disable=broad-except
+            continue
+
+    # Strategy 3: direct font paths on macOS.
+    if _sys.platform == "darwin":
+        for path in _MACOS_FONT_PATHS:
+            if _os.path.isfile(path):
+                try:
+                    return pygame.font.Font(path, size)
+                except Exception:  # pylint: disable=broad-except
+                    continue
+
+    # Last resort: pygame's built-in freesansbold.ttf (has Unicode arrows).
+    return pygame.font.Font(None, size)
 
 
 def _scale(value: float, factor: float) -> int:
