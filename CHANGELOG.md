@@ -1,3 +1,10 @@
+## 0.9.10 — 2026-03-23
+
+### Changes since v0.9.9
+
+- 75be7a1 Hand edit the keyboard a little.
+- 43f6919 Start 0.9.10-dev
+
 ## 0.9.9 — 2026-03-23
 
 ### Changes since v0.9.8
