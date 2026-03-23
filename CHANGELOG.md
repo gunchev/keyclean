@@ -1,3 +1,17 @@
+## 0.9.6 — 2026-03-23
+
+### Changes since v0.9.5
+
+- d7f0244 Add prompts 28-35 to PROMPT.md
+- a83e8d2 Eliminate negative rows; simplify renderer
+- f137649 Simplify Enter to row 3 only; fix backslash overlap
+- 270cc59 Rework F-row spacing and ISO Enter L-shape
+- 0387c5a Fix layout, fonts, and macOS dependency
+- 4e97e57 Remove ISO extra key, widen Left Shift to 2.25u
+- 3ae9633 Fix missing arrow glyphs on macOS by using Unicode-capable fonts
+- 2b51a4d Make pynput a core dependency on macOS and Windows
+- e99bf9b Start 0.9.6-dev
+
 ## 0.9.5 — 2026-03-23
 
 ### Changes since v0.9.4
