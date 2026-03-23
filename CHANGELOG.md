@@ -1,3 +1,11 @@
+## 0.9.7 — 2026-03-23
+
+### Changes since v0.9.6
+
+- 0ba6e2b Add prompts 36-37 to PROMPT.md
+- b1d0053 Fix macOS crash when Accessibility permission not granted; remove keyclean-gui
+- d3b9267 Start 0.9.7-dev
+
 ## 0.9.6 — 2026-03-23
 
 ### Changes since v0.9.5

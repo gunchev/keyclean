@@ -1,5 +1,5 @@
 """KeyClean — cross-platform keyboard cleaning utility."""
 
-__version__ = "0.9.7-dev"
+__version__ = "0.9.7"
 __author__ = "Doncho Nikolaev Gunchev"
 __license__ = "Unlicense"
