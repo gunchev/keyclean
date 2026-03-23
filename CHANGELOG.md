@@ -1,3 +1,15 @@
+## 0.9.1 — 2026-03-23
+
+### Changes since v0.9.0
+
+- 76ff654 Clean "make clean"
+- 4ca712c Clean up the clean target in Makefile
+- fdb2860 Make release.py executable, update prompts.
+- abdfb80 Move release logic to release.py; simplify Makefile target
+- 01f9e3f Add evdev kernel-level grabber; prefer it on Linux
+- 6f6a379 Re-assert Wayland keyboard grab on focus regain
+- 23aca20 Append vibe-coding session prompts to PROMPT.md
+
 ## 0.9.0 — 2026-03-22
 
 ### Changes since beginning
