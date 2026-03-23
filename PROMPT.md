@@ -156,3 +156,7 @@ allowing users to wipe their physical keyboard without triggering commands.
 36. "Interesting, on MacOS 0.9.5 was working, but 0.9.6 is crashing and I am getting a prompt to reopen it (which does not work). Also, I get `keyclean` and `keyclean-gui`, what is the use of the second script?"
 
 37. "Let's test that. You know the drill, @PROMPT.md, release and I will test."
+
+38. "Nope, keeps crashing. I get \"pygame-ce 2.5.7 (SDL 2.32.10, Python 3.14.3)\" and \"Trace/BPT trap: 5          keyclean\" on Mac."
+
+39. "You know the drill, @PROMPT.md, release and I will test."
