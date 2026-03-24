@@ -31,8 +31,8 @@ help:
 	@echo
 	@echo "    release:            tag a new release (required: V=X.Y.Z), e.g. make V=1.0.0 release"
 	@echo
-	@echo "    rpm:                build RPM and SRPM (required: RPM_VER=X.Y.Z RPM_REV=N)"
-	@echo "    srpm:               build SRPM only  (required: RPM_VER=X.Y.Z RPM_REV=N)"
+	@echo "    rpm:                build RPM and SRPM (optional: RPM_VER=X.Y.Z RPM_REV=N)"
+	@echo "    srpm:               build SRPM only  (optional: RPM_VER=X.Y.Z RPM_REV=N)"
 	@echo
 	@echo "    run:                sync dev environment and run the app (development mode)"
 	@echo
@@ -86,10 +86,12 @@ uninstall:
 useruninstall: uninstall
 
 
+RPM_VER ?= $(shell git tag --sort=-version:refname | grep -E '^v?[0-9]' | head -1 | sed 's/^v//')
+RPM_REV ?= 0
+
 .PHONY: rpmprep
 rpmprep:
-	@[ -n "$(RPM_VER)" ] || { echo "Error: RPM_VER is not set.  Usage: make rpm RPM_VER=X.Y.Z RPM_REV=N"; exit 1; }
-	@[ -n "$(RPM_REV)" ] || { echo "Error: RPM_REV is not set.  Usage: make rpm RPM_VER=X.Y.Z RPM_REV=N"; exit 1; }
+	@[ -n "$(RPM_VER)" ] || { echo "Error: RPM_VER could not be determined (no release tags found)."; exit 1; }
 	cp "rpm/$(name).spec.in" "$(name).spec"
 	sed -i 's|^Version:.*|Version:        $(RPM_VER)|g' "$(name).spec"
 	sed -i 's|^Release:.*|Release:        $(RPM_REV)%{?dist}|g' "$(name).spec"

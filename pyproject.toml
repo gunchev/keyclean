@@ -32,7 +32,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "pygame>=2.1.0",
+    "pygame-ce>=2.4.0",
     "evdev>=1.7.0; sys_platform == 'linux'",
     "pynput>=1.7.0; sys_platform == 'win32'",
 ]

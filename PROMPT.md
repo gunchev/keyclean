@@ -113,7 +113,7 @@ allowing users to wipe their physical keyboard without triggering commands.
 
 15. For some reason the Super key gets captured by KeyClean, but shortly after KDE's application launcher picks it up too.
 
-16. Nope, same story. Maybe take a look how @~/github/gunchev/kbdclean/ does it, there is no problem with Super.
+16. Nope, same story. Maybe take a look how @../kbdclean/ does it, there is no problem with Super.
 
 17. Put the release part in a separate python script `release.py`, clean the Makefile.
 
@@ -162,3 +162,27 @@ allowing users to wipe their physical keyboard without triggering commands.
 39. "You know the drill, @PROMPT.md, release and I will test."
 
 40. "Interesting, now it shows a crash dialog, which I can close, and then the app shows up. If I grant the accessibility permission to iterm it just crashes, nothing works. And the arrow keys are still just empty squares."
+
+41. "Why are the files in `src/keyclean/input_grabber/` named with underscore at the start?"
+
+42. "OK, what does `pygame-ce` provide here, besides the obvious full screen scene? I am thinking can it be done using TUI?"
+
+43. "Add RPM packaging, desktop entry and icon please."
+
+44. "Will python3-pygame.x86_64 work?"
+
+45. "Nope, still broken. Drop `pygame-ce` and replace it with just `pygame`."
+
+46. "Same error." *(after switching to plain pygame — pygame 2.6.1 from PyPI has a broken font module with Python 3.14)*
+
+47. "Figure out what the Font problem is. There are games that rely on pygame and work fine."
+
+48. "Looks like pygame and pygame-ce are both quite problematic to package, for Fedora at least. Can python3-pysdl2 replace it for the purpose of KeyClean?"
+
+49. "But `make rpm` still fails with: `python3dist(pygame-ce) >= 2.4 is needed by keyclean-...`" *(fix: sed-replace pygame-ce→pygame in pyproject.toml during %prep so %pyproject_buildrequires generates python3dist(pygame) instead)*
+
+50. "Add a changelog to the rpm spec file for the initial package."
+
+51. "Nice, `make rpm RPM_VER=0.9.10 RPM_REV=0` works. Can you make RPM_VER default to the latest release and RPM_REV default to 0?"
+
+52. "Please update the prompts. No need for new release this time."
